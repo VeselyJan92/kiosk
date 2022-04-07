@@ -5,8 +5,8 @@ import org.litote.kmongo.*
 
 
 @Serializable
-data class BlogPostEntity(
-    var _id: String = newId<BlogPostEntity>().toString(),
+data class TravelInfoEntity(
+    var _id: String = newId<TravelInfoEntity>().toString(),
     var hotel_id: String,
     var title: String,
     var text: String,

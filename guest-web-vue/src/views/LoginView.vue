@@ -48,11 +48,9 @@ async function login(e){
 
   const hotelId = await userStore.login(credentials.value.email, credentials.value.password)
 
-  console.log(hotelId)
-
   if (hotelId){
     invalidCredentials.value = false
-    router.push({name: "kiosk", params: {id: hotelId}} )
+    router.push({name: "hotel", params: {id: hotelId}} )
   }else{
     invalidCredentials.value = true
   }

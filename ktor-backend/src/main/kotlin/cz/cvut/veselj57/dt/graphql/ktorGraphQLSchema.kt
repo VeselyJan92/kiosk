@@ -25,9 +25,10 @@ import com.expediagroup.graphql.generator.scalars.IDValueUnboxer
 import com.expediagroup.graphql.generator.toSchema
 import cz.cvut.veselj57.dt.graphql.directives.AuthHotelDirectiveWiring
 import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
+import cz.cvut.veselj57.dt.graphql.mutations.TravelInfoMutation
 import cz.cvut.veselj57.dt.graphql.mutations.TripMutation
 import cz.cvut.veselj57.dt.graphql.queries.HotelQuery
-import cz.cvut.veselj57.dt.services.NewHotelService
+import cz.cvut.veselj57.dt.graphql.queries.TripQuery
 import graphql.*
 import graphql.execution.DataFetcherExceptionHandler
 import graphql.execution.DataFetcherExceptionHandlerParameters
@@ -71,11 +72,12 @@ object GraphQLSchema: KoinComponent {
     private val queries = listOf(
         TopLevelObject(HotelQuery(get())),
         TopLevelObject(AdminQuery()),
-        TopLevelObject(TripQuery()),
+        TopLevelObject(TripQuery(get())),
     )
     private val mutations = listOf(
-        TopLevelObject(TripMutation(get(), get(), get())),
-        TopLevelObject(HotelMutation(get(), NewHotelService()))
+        TopLevelObject(TripMutation(get())),
+        TopLevelObject(HotelMutation(get(), get())),
+        TopLevelObject(TravelInfoMutation(get()))
     )
 
     val graphQLSchema = toSchema(config, queries, mutations)

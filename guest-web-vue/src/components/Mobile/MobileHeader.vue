@@ -11,33 +11,28 @@
         </div>
       </div>
 
-
-      <div>
-        <NuxtLink to="/">Karta pobytu</NuxtLink>
+      <div class="link">
+        <router-link class="accommodation-link" to="/">Karta pobytu</router-link>
       </div>
 
-      <div>
+      <div class="link">
         <span style="color: red">Prozkoumej</span>
-        <NuxtLink to="/">Oficiální stránky ubytovatele</NuxtLink>
-
+        <router-link to="/">Oficiální stránky ubytovatele</router-link>
       </div>
 
       <div class="spacer"></div>
 
+      <div class="contact">
+        <div>
+          <GrayButton icon="call" text="+420 774 406 784"></GrayButton>
+        </div>
 
-      <div>
-        <GrayButton icon="call" text="+420 774 406 784"></GrayButton>
+        <div>
+          <GrayButton icon="email" text="veselypenzion@email.cz"></GrayButton>
+        </div>
       </div>
 
-      <div>
-        <GrayButton icon="email" text="veselypenzion@email.cz"></GrayButton>
-      </div>
 
-      <div>
-        <NuxtLink to="asdsa">
-          <GrayButton icon="navigation" text="Navigace"></GrayButton>
-        </NuxtLink>
-      </div>
 
     </div>
 
@@ -45,31 +40,51 @@
   </nav>
 </template>
 
-<script>
-import GrayButton from "./GrayButton.vue";
-export default {
-  name: "Header",
-  components: {GrayButton}
-}
+<script setup>
+import GrayButton from "../GrayButton.vue";
+
+
 </script>
 
 <style scoped lang="scss">
 
 nav{
-  width: 100vw;
-  height: 90px;
+  width: 100%;
+  background-color: #e2e2e2;
+
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  @include lg{
+    height: 90px;
+  }
 }
+
 
 
 nav > div {
   margin: 0 auto;
+  padding: 15px;
   justify-content: space-between;
   display: flex;
-  flex-direction: row;
-  max-width: 1920px;
+  flex-direction: column;
+  max-width: 1500px;
   height: 100%;
-  align-items: center;
+  gap: 10px;
+
+
+
+  align-items: flex-start;
+
+
+  @include md{
+    gap: 20px;
+  }
+
+  @include lg{
+    align-items: center;
+
+    flex-direction: row;
+  }
 
   .logo {
     margin-right: 30px;
@@ -99,22 +114,46 @@ nav > div {
         line-height: 16px;
       }
     }
-
-
   }
+
+
 
 
   .spacer {
-    flex-grow: 1;
+    display: none;
+
+    @include lg{
+      display: block;
+      flex-grow: 1;
+    }
   }
 
-  &> div:not(.logo):not(.spacer){
+  &> div{
     height: 50px;
-    margin-left: 40px;
+
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
   }
+
+  .link{
+
+
+    display: none;
+
+    @include lg{
+      display: flex;
+      flex-direction: column;
+    }
+
+    a{
+      text-decoration: none;
+      color: black;
+
+    }
+  }
+
+
 
   a {
     font-size: 20px;
@@ -126,7 +165,20 @@ nav > div {
     font-weight: bold;
   }
 
+}
 
+
+
+.contact{
+  gap: 20px;
+  flex-direction: row;
+
+  align-self: center;
+  display: none;
+
+  @include xl{
+    display: flex;
+  }
 
 }
 

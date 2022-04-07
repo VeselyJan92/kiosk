@@ -1,4 +1,4 @@
-package cz.cvut.veselj57.dt
+package cz.cvut.veselj57.dt.utils
 
 import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
 import cz.cvut.veselj57.dt.graphql.mutations.TripMutation
@@ -22,7 +22,7 @@ object TestSeeder {
         text: String = "text",
         imgs: List<String>? = null,
         tags: List<String> = listOf("nature", "cycling"),
-        categories: List<String>
+        categories: List<String> = listOf()
     ): TripMutation.UpsertTrip {
         val seedImages = listOf("seed/pecka.jpg", "seed/bike.jpg", "seed/castle.jpg").map {
             "blob:" + javaClass.classLoader.getResource(it)!!.openStream().readAllBytes().encodeBase64()

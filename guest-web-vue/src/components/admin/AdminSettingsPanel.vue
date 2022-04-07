@@ -2,9 +2,11 @@
 
   <PopupEditActivity :trip-id="null" v-if="insertTripPopup" @close="insertTripPopup = false"></PopupEditActivity>
 
+  <PopupEditCategory v-if="editCategoryPopup" @close="editCategoryPopup = false"></PopupEditCategory>
+
   <div class="admin-settings-panel">
 
-    <div >
+    <div>
       <span class="material-icons md-24">add</span>
       <span>Článek</span>
     </div>
@@ -14,7 +16,7 @@
       <span>Výlet</span>
     </div>
 
-    <div>
+    <div @click="editCategoryPopup = true">
       <span class="material-icons md-24">add</span>
       <span>Skupina výletů</span>
     </div>
@@ -25,6 +27,14 @@
     </div>
 
 
+    <div style="flex-grow: 1"></div>
+
+
+
+    <div>
+      <span class="material-icons md-24">logout</span>
+      <span @click.stop="logout">Logout</span>
+    </div>
 
 
 
@@ -38,9 +48,19 @@
 
 import PopupEditActivity from "@/components/admin/PopupEditActivity.vue";
 import {ref} from "vue";
+import PopupEditCategory from "@/components/admin/PopupEditCategory.vue";
+import {useUserStore} from "@/stores/user";
 
 
 const insertTripPopup = ref(false)
+const editCategoryPopup = ref(false)
+
+
+const user = useUserStore()
+
+function logout(){
+  user.logout()
+}
 
 
 
@@ -53,9 +73,10 @@ const insertTripPopup = ref(false)
   margin-top: 20px;
   display: flex;
   flex-direction: row;
+  border-radius: 10px;
   gap: 20px;
 
-  background-color: #F9F9F9;
+  background-color: #ebebeb;
 
 
 

@@ -89,14 +89,12 @@ type Data = {
 import Popup from "@/components/Popup.vue";
 import {onBeforeMount, ref} from "vue";
 import {encode} from "base64-arraybuffer";
-import {graphQLClient} from "@/composables/GraphQL";
-import {gql, RequestDocument} from "graphql-request";
+import {getGraphQLClient, graphQLClient} from "@/composables/GraphQL";
+import {gql} from "graphql-request";
 import {useKioskStore} from "@/stores/kiosk";
 
 const store = useKioskStore()
-
 const props = defineProps({ tripId: String })
-
 const emit = defineEmits(['close'])
 
 
@@ -104,7 +102,6 @@ const selectableCategories =  store.data.trip_categories.map(category => ({name:
 
 
 const selected =  ref([])
-const img_urls = ref([String])
 
 const data = ref(null)
 
@@ -123,7 +120,7 @@ onBeforeMount(async ()=>{
       }
     }`
 
-    const trip = (await graphQLClient.request(mutation, {ids: [props.tripId] })).searchTrips[0]
+    const trip = (await getGraphQLClient().request(mutation, {ids: [props.tripId] })).searchTrips[0]
 
     trip.tags = trip.tags.join(", ")
     data.value = trip
@@ -147,9 +144,9 @@ async function deleteTrip(){
         }
       }`
 
-  await graphQLClient.request(mutation, {_id: data.value._id})
+  await getGraphQLClient().request(mutation, {_id: data.value._id})
 
-  await store.init()
+  await store.reload_kiosk()
 
   emit("close")
 }
@@ -163,8 +160,8 @@ async function submit(e){
   for (const item of data.value.img_urls){
     if (item.startsWith("blob")) {
       imgs.push(await fetch(item).then((b) => b.blob()).then((r) => r.arrayBuffer()).then(r => "blob:" + encode(r)))
-    } else {
-      imgs.push(item)
+    } else if (item.startsWith("http")) {
+      imgs.push("id:"+item.split("/").pop())
     }
   }
 
@@ -173,12 +170,11 @@ async function submit(e){
   const tags = trip.tags.split(",").map((tag) => tag.trim())
   const categories = selected.value.map(item => item._id)
 
-
   const mutation = gql`mutation( $input: UpsertTripInput! ) { upsertTrip(input: $input) { _id } }`
 
-  await graphQLClient.request(mutation, {input: {id: props.tripId, imgs, tags, categories, title: trip.title, text: trip.text}})
+  await getGraphQLClient().request(mutation, {input: {id: props.tripId, imgs, tags, categories, title: trip.title, text: trip.text}})
 
-  await store.init()
+  await store.reload_kiosk()
 
   emit("close")
 

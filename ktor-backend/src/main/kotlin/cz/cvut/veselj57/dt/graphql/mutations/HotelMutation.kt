@@ -14,15 +14,14 @@ import cz.cvut.veselj57.dt.graphql.security.GQLRole
 import cz.cvut.veselj57.dt.persistence.MongoDB
 import cz.cvut.veselj57.dt.services.NewHotelService
 import graphql.schema.DataFetchingEnvironment
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.litote.kmongo.newId
 
-
 class HotelMutation(
-    val db: MongoDB,
-    val newHotelService: NewHotelService
+    private val db: MongoDB,
+    private val newHotelService: NewHotelService
 ) : Mutation {
-
-
 
     @AuthHotelDirective
     suspend fun modifyTripCategories(dfe: DataFetchingEnvironment, categories: List<TripCategoryQL>): List<TripCategoryQL> {

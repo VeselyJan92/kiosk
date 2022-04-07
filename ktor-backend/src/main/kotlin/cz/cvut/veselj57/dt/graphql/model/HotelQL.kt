@@ -1,13 +1,10 @@
 package cz.cvut.veselj57.dt.graphql.model
 
 import com.expediagroup.graphql.generator.annotations.GraphQLName
-import cz.cvut.veselj57.dt.entities.BlogPostEntity
 import cz.cvut.veselj57.dt.entities.HotelEntity
-import cz.cvut.veselj57.dt.entities.TripEntity
 import cz.cvut.veselj57.dt.graphql.GraphQLSchema.getKoin
-import cz.cvut.veselj57.dt.repository.BlogPostDAO
+import cz.cvut.veselj57.dt.repository.TravelInfoTextDAO
 import graphql.schema.DataFetchingEnvironment
-import org.koin.java.KoinJavaComponent
 
 
 @kotlinx.serialization.Serializable
@@ -23,7 +20,7 @@ data class HotelQL(
 ){
 
     suspend fun blog_posts(dfe: DataFetchingEnvironment): List<BlogPostQL> {
-        return getKoin().get<BlogPostDAO>().getHotelBlogPosts(_id).map { it.toGQL(dfe) }
+        return getKoin().get<TravelInfoTextDAO>().getHotelTravelInfos(_id).map { it.toGQL(dfe) }
     }
 
 }

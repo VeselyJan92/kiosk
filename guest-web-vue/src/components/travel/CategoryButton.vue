@@ -1,13 +1,13 @@
 <template>
+  <div>
+    <PopupEditCategory v-if="edit" @close="edit=false" :category="props.category"></PopupEditCategory>
 
-  <PopupEditCategory v-if="edit" @close="edit=false" :category="props.category"></PopupEditCategory>
+    <div class="category" v-bind:class="{selected: selected}">
+      <span>{{ props.category.name }}</span>
+      <span class="material-icons" v-if="user.edit_mode" @click.stop="edit=true">edit</span>
+    </div>
 
-  <div class="category" v-bind:class="{selected: selected}">
-    <span>{{ props.category.name }}</span>
-    <span class="material-icons"  v-if="store.state.edit" @click="edit=true">edit</span>
   </div>
-
-
 </template>
 
 <script setup>
@@ -15,11 +15,14 @@
 import {useKioskStore} from "@/stores/kiosk";
 import PopupEditCategory from "@/components/admin/PopupEditCategory.vue";
 import {ref} from "vue";
+import {useUserStore} from "@/stores/user";
 
 const props = defineProps({category: Object, selected:Boolean})
 
 
 const store = useKioskStore()
+
+const user = useUserStore()
 
 
 const edit = ref(false)
@@ -54,19 +57,19 @@ const edit = ref(false)
   }
 
   &:hover{
-    background: #D8D8D8;
+    background-color: #E7ECF3;
     cursor: pointer;
 
   }
 
-  //background: #D8D8D8;
+  background: #ececec;
   border: 1px solid #A5A5A5;
   box-sizing: border-box;
 }
 
 
 .selected{
-  background: #D8D8D8;
+  border: 2px solid black;
 }
 
 

@@ -14,7 +14,10 @@
 import { RouterLink, RouterView } from 'vue-router'
 
 
+import {cz} from 'graphql-common'
 
+
+new cz.cvut.veselj57.dt.graphql.common.model.TripInfo("", "", "", "")
 
 
 

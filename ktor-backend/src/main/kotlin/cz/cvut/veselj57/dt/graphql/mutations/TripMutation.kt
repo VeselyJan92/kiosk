@@ -12,30 +12,23 @@ import cz.cvut.veselj57.dt.graphql.security.roleAllowed
 import cz.cvut.veselj57.dt.persistence.MongoDB
 import cz.cvut.veselj57.dt.repository.ImageDAO
 import cz.cvut.veselj57.dt.repository.TripDAO
-import graphql.ErrorClassification
-import graphql.GraphQLError
 import graphql.GraphQLException
-import graphql.GraphqlErrorException
 import graphql.schema.DataFetchingEnvironment
-import org.bson.types.ObjectId
-import org.litote.kmongo.eq
+import org.koin.core.component.inject
 import java.util.Base64
-import org.litote.kmongo.coroutine.updateOne
 import org.litote.kmongo.newId
 
 
 class TripMutation(
-    val tripDAO: TripDAO,
-    val imageDAO: ImageDAO,
-    val db: MongoDB
-) : Mutation {
+    private val tripDAO: TripDAO
+) {
 
     @kotlinx.serialization.Serializable
     data class UpsertTrip(
-        val id: String?,
-        val title: String,
+        var id: String?,
+        var title: String,
         val text: String,
-        val imgs: List<String>,
+        var imgs: List<String>,
         val tags: List<String>,
         val categories: List<String>
     )
@@ -45,7 +38,7 @@ class TripMutation(
         dfe: DataFetchingEnvironment,
         input: UpsertTrip
 
-    ): TripQL {
+    ): TripQL? {
         val hotel = dfe.graphQlContext.get<GQLRole.Hotel>(KtorGraphQLContextFactory.ROLE_KEY).entity
 
         val oldTrip = tripDAO.getTrip(input.id)
@@ -53,55 +46,33 @@ class TripMutation(
         if (oldTrip != null && oldTrip.hotel_id != hotel._id)
             throw GraphQLException("Unauthorized")
 
-        val img_ids = input.imgs.map {
-            when{
-                it.startsWith("http") -> {
-                    it.substringAfterLast("/")
-                }
 
-                it.startsWith("blob") -> {
-                    imageDAO.putImage(Base64.getDecoder().decode( it.removePrefix("blob:")))
-                }
+        val oldImages = mutableListOf<String>()
+        val newImages = mutableListOf<ByteArray>()
+
+        input.imgs.forEach {
+            when {
+                it.startsWith("id:") -> oldImages.add(it.removePrefix("id:"))
+                it.startsWith("blob:") -> newImages.add(Base64.getDecoder().decode( it.removePrefix("blob:")))
                 else -> throw Exception("Wrong type: $it")
             }
         }
 
-        val trip = TripEntity(input.id ?: newId<TripEntity>().toString() ,hotel._id, input.title, input.text, img_ids, input.tags)
+        val trip = tripDAO.upsertTrip(
+            trip = TripEntity(input.id ?: newId<TripEntity>().toString() ,hotel._id, input.title, input.text, oldImages, input.tags),
+            addImages = newImages
+        )
 
-        if (oldTrip == null){
-            trip._id = db.trips.insertOne(trip).insertedId.asString().value
-        } else{
-            db.trips.updateOne(trip)
-
-            oldTrip.imgs.subtract(img_ids).forEach{
-                imageDAO.deleteImage(it)
-            }
-        }
-
-        hotel.trip_categories.forEach {
-            it.trips_ids = it.trips_ids.toMutableSet().apply {
-                if (input.categories.contains(it._id))
-                    add(trip._id)
-                else
-                    remove(trip._id)
-            }.toList()
-        }
-
-        db.hotels.updateOne(hotel)
+        tripDAO.updateTripCategories(hotel, trip, input.categories)
 
         return trip.toGQL(dfe)
     }
 
+    @AuthHotelDirective
     suspend fun deleteTrip(dfe: DataFetchingEnvironment, id: String): TripQL = roleAllowed(dfe, GQLRole.Hotel::class){ role ->
         val trip = tripDAO.getTrip(id, role._id) ?: throw Exception("Trip not find.")
-        val hotel = db.hotels.findOne(HotelEntity::_id  eq role._id) ?: throw Exception("Hotel not find.")
 
-        hotel.trip_categories.forEach {
-            it.trips_ids = it.trips_ids.toMutableList().apply { remove(trip._id) }
-        }
-
-        db.hotels.updateOne(hotel)
-        db.trips.deleteOneById(ObjectId(id))
+        tripDAO.deleteTrip(trip)
 
         return trip.toGQL(dfe)
     }

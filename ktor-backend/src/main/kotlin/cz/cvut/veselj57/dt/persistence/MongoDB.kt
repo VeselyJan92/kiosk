@@ -2,9 +2,7 @@ package cz.cvut.veselj57.dt.persistence
 
 import com.mongodb.reactivestreams.client.gridfs.GridFSBucket
 import com.mongodb.reactivestreams.client.gridfs.GridFSBuckets
-import cz.cvut.veselj57.dt.MongoConfig.DATABASE_NAME
-import cz.cvut.veselj57.dt.Seeder
-import cz.cvut.veselj57.dt.entities.BlogPostEntity
+import cz.cvut.veselj57.dt.entities.TravelInfoEntity
 import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.entities.TripEntity
 import io.ktor.server.application.*
@@ -26,7 +24,7 @@ interface MongoDB {
     val database: CoroutineDatabase
     val hotels: CoroutineCollection<HotelEntity>
     val trips: CoroutineCollection<TripEntity>
-    val posts: CoroutineCollection<BlogPostEntity>
+    val posts: CoroutineCollection<TravelInfoEntity>
 
     val images: GridFSBucket
 
@@ -56,7 +54,7 @@ class MongoDBImpl(
 
     override val trips = database.getCollection<TripEntity>()
 
-    override val posts = database.getCollection<BlogPostEntity>()
+    override val posts = database.getCollection<TravelInfoEntity>()
 
     override val images: GridFSBucket = GridFSBuckets.create(database.database, "TripImages")
 

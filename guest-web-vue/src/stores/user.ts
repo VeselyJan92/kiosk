@@ -3,6 +3,9 @@ import { defineStore } from 'pinia'
 
 
 export const useUserStore  = defineStore("user_store", {
+  persist: {
+    storage: window.sessionStorage,
+  },
   state: () => ({
     authenticated_hotel_id: null,
     token: null,
@@ -10,9 +13,14 @@ export const useUserStore  = defineStore("user_store", {
   getters:{
     edit_mode(): boolean{
       return this.token !=null
-    }
+    },
+
   },
   actions: {
+    logout(){
+      this.token = null
+      this.authenticated_hotel_id = null
+    },
 
     async login(email: String, password: String){
 

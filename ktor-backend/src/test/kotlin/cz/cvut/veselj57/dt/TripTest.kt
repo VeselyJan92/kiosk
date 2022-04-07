@@ -3,14 +3,11 @@ package cz.cvut.veselj57.dt
 
 import cz.cvut.veselj57.dt.gql_model.*
 import cz.cvut.veselj57.dt.graphql.model.TripCategoryQL
-import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
-import cz.cvut.veselj57.dt.graphql.mutations.TripMutation
-import io.ktor.client.statement.*
+import cz.cvut.veselj57.dt.utils.TestSeeder
 import io.ktor.server.testing.*
+import io.ktor.util.*
 
 
-import kotlinx.serialization.json.*
-import org.litote.kmongo.MongoOperator
 import kotlin.test.*
 
 
@@ -18,7 +15,7 @@ import kotlin.test.*
 class TripTest {
 
     @Test
-    fun `insert trip`() = testApplication {
+    fun `insert and modify trip`() = testApplication {
         clear_database()
 
         val password = "secret"
@@ -30,31 +27,52 @@ class TripTest {
 
         val token = login(client, email, password)
 
-        val data = getHotelData(client, registration._id, token)
+        val seedImages = listOf("seed/pecka.jpg", "seed/bike.jpg", "seed/castle.jpg").map {
+            "blob:" + javaClass.classLoader.getResource(it)!!.openStream().readAllBytes().encodeBase64()
+        }
 
-        assertNotNull(data)
+        val tripData = TestSeeder.getUpsertTripData(imgs = seedImages)
 
-        val category = TripCategoryQL(null, "category", listOf())
-
-        val categories = modifyCategories(client, listOf(category), token)
-
-        assertEquals(1, categories.size)
-
-        val tripCategories= categories.map { it._id!! }
-
-        val tripData = TestSeeder.getUpsertTripData(categories = tripCategories)
-
-        val insertedTrip = upsertTrip(client, tripData, token)
+        var insertedTrip = upsertTrip(client, tripData, token)
 
         assertNotSame("", insertedTrip._id)
         assertEquals(tripData.text, insertedTrip.text)
         assertEquals(tripData.title, insertedTrip.title)
         assertEquals(tripData.tags, insertedTrip.tags)
-        assertEquals(tripData.categories, tripCategories)
+        //assertEquals(tripData.categories, tripCategories)
+        assertEquals(seedImages.size, insertedTrip.imgs?.size)
+
+        val newTitle = "New Title"
+
+        tripData.id = insertedTrip._id
+        tripData.title = newTitle
+
+        val oldImages = insertedTrip.imgs!!.drop(1)
+
+        tripData.imgs = oldImages.map { "id:$it" }
+
+        insertedTrip  = upsertTrip(client, tripData, token)
+
+        assertEquals(2, insertedTrip.imgs?.size)
+        assertEquals(newTitle, insertedTrip.title, )
+
+        val newImg = "blob:" + javaClass.classLoader.getResource("seed/pecka.jpg")!!.openStream().readAllBytes().encodeBase64()
+
+        tripData.imgs = tripData.imgs + newImg
+
+        insertedTrip  = upsertTrip(client, tripData, token)
+
+
+        assertEquals(3, insertedTrip.imgs?.size)
+
+        oldImages.forEach {
+            assertContains(insertedTrip.imgs!!, it)
+        }
+
     }
 
     @Test
-    fun `preven modification`() = testApplication {
+    fun `prevent trip insertion to another hotel`() = testApplication {
         clear_database()
 
         val password = "secret"
@@ -84,6 +102,55 @@ class TripTest {
             fail()
         }catch (e: Exception){
             assertContains(e.toString(), "Unauthorized")
+        }
+
+    }
+
+    @Test
+    fun `modify categories`() = testApplicationClearDB{
+
+
+        val password = "secret"
+        val email = "veselj57@fel.cvut.cz"
+
+        val registration = registerHotel(client, TestSeeder.getHotelRegistration(email, password))
+        val token = login(client, email, password)
+
+        val categoriesx = listOf(
+            TripCategoryQL(null, "category 1", listOf()),
+            TripCategoryQL(null, "category 2", listOf())
+        )
+
+        val categories = modifyCategories(client,categoriesx, token)
+
+        val trip1 = upsertTrip(client, TestSeeder.getUpsertTripData(categories = listOf(categories[0]._id!!)), token)
+        val trip2 = upsertTrip(client, TestSeeder.getUpsertTripData(categories = listOf(categories[1]._id!!)), token)
+
+        val insertedCategories  = getHotelData(client, registration._id, token)!!.trip_categories
+
+        assertEquals(categoriesx.size, insertedCategories!!.size)
+
+        insertedCategories.find { it.name == "category 1" }!!.trip_ids.apply {
+            assertEquals(1, size)
+            assertEquals(trip1._id, first() )
+        }
+
+        insertedCategories.find { it.name == "category 2" }!!.trip_ids.apply {
+            assertEquals(1, size)
+            assertEquals(trip2._id, first() )
+        }
+
+        upsertTrip(client, TestSeeder.getUpsertTripData(id = trip1._id, categories = listOf()), token)
+
+        getHotelData(client, registration._id, token)!!.trip_categories!!.apply {
+            find { it.name == "category 1" }!!.trip_ids.apply {
+                assertEquals(0, size)
+            }
+
+            find { it.name == "category 2" }!!.trip_ids.apply {
+                assertEquals(1, size)
+                assertEquals(trip2._id, first() )
+            }
         }
 
     }

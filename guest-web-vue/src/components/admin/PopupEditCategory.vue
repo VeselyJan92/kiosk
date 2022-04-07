@@ -1,7 +1,5 @@
 <template>
-
   <Popup title="Upravit kategorii"  @close="emit('close')">
-
 
     <form @submit="submit">
       <div class="mb-3">
@@ -11,14 +9,11 @@
     </form>
 
     <div class="popup-footer">
-      <button v-if="props.category._id" type="button" class="btn btn-danger" @click="remove">Smazat</button>
-      <button type="button" @click="update" class="btn btn-primary">{{ props.category._id ? "Uložit" : "Přidat"}}</button>
+      <button v-if="props?.category?._id" @click.stop="remove" type="button" class="btn btn-danger" @click="remove">Smazat</button>
+      <button type="submit" @click="submit" class="btn btn-primary">{{ props.category._id ? "Uložit" : "Přidat"}}</button>
     </div>
 
-
   </Popup>
-
-
 </template>
 
 <script setup lang="ts">
@@ -33,11 +28,11 @@ import Popup from "@/components/Popup.vue";
 import {useKioskStore} from "@/stores/kiosk";
 import {onBeforeMount, ref} from "vue";
 import {gql} from "graphql-request";
-import {graphQLClient} from "@/composables/GraphQL";
+import {getGraphQLClient, graphQLClient} from "@/composables/GraphQL";
 
 const store = useKioskStore()
 
-const props = defineProps({ category: Object })
+const props = defineProps({ category:{ type: Object, default:{_id: null, name: ""}}})
 
 const emit = defineEmits(['close'])
 
@@ -46,15 +41,25 @@ console.log(props.category)
 const name = ref(props.category.name)
 
 
-async function update(){
 
-  console.log(name.value)
+function mapCategories(): [Object]{
+  return store.data.trip_categories.map(item => ({_id: item._id, name: item.name, trip_ids: item.trip_ids}))
+}
 
-  console.log(store.data.trip_categories)
+async function modifyTripCategories(categories: Object[]){
+  const mutation = gql`mutation($categories: [TripCategoryInput!]!){modifyTripCategories(categories: $categories){ _id } }`
+  await getGraphQLClient().request(mutation, {categories})
+  await store.reload_kiosk()
 
-  let categories = store.data.trip_categories.map(item => ({_id: item._id, name: item.name, trip_ids: item.trip_ids}))
+  emit("close")
+}
 
-  if (props.category == null){
+async function submit(e: Event){
+  e.preventDefault()
+
+  const categories = mapCategories()
+
+  if (props.category?._id == null){
     categories.push({_id: null, name: name.value, trip_ids: []})
   }else {
 
@@ -64,15 +69,13 @@ async function update(){
       update.name = name.value
   }
 
-  console.log(categories)
+  modifyTripCategories(categories)
+}
 
-  const mutation = gql`mutation($categories: [TripCategoryInput!]!){modifyTripCategories(categories: $categories){ _id } }`
 
-  await graphQLClient.request(mutation, {categories})
-
-  await store.init()
-
-  emit("close")
+async function remove(){
+  const categories = mapCategories().filter(category => category._id != props.category._id)
+  modifyTripCategories(categories)
 }
 
 

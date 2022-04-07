@@ -1,16 +1,13 @@
 package cz.cvut.veselj57.dt.services
 
-import at.favre.lib.crypto.bcrypt.BCrypt
 import com.thedeanda.lorem.LoremIpsum
-import cz.cvut.veselj57.dt.entities.BlogPostEntity
+import cz.cvut.veselj57.dt.entities.TravelInfoEntity
 import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.entities.TripCategoryEntity
 import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
-import cz.cvut.veselj57.dt.id
 import cz.cvut.veselj57.dt.persistence.MongoDB
 import cz.cvut.veselj57.dt.repository.HotelDAO
 import cz.cvut.veselj57.dt.repository.TripDAO
-import io.ktor.util.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.litote.kmongo.newId
@@ -75,7 +72,7 @@ class NewHotelService: KoinComponent {
 
 
         repeat(4){
-            db.posts.insertOne(BlogPostEntity(
+            db.posts.insertOne(TravelInfoEntity(
                 hotel_id = id,
                 title = lorem.getTitle(4, 9),
                 text = lorem.getHtmlParagraphs(1, 2)

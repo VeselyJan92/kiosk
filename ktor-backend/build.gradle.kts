@@ -31,6 +31,10 @@ repositories {
 
 
 dependencies {
+
+    implementation("cz.cvut.veselj57.dt:graphql-common:1.0")
+
+
     implementation("at.favre.lib:bcrypt:0.9.0")
     implementation("ch.qos.logback:logback-classic:1.2.11")
 

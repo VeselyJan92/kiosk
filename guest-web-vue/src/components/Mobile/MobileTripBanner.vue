@@ -1,9 +1,9 @@
 <template>
   <PopupEditActivity v-if="edit" @close="edit = false"  :trip-id="data._id"></PopupEditActivity>
 
-  <TripPopup v-if="show" @close="show.value = false" :data="data"></TripPopup>
+  <TripPopup v-if="show" @close="show = false" :data="data"></TripPopup>
 
-  <div class="trip-banner"  @click="show.value = true">
+  <div class="trip-banner"  @click="show = true">
 
     <img :src="data.main_img_url">
 
@@ -16,11 +16,11 @@
 
         <span class="date">24. 01. 2022</span>
 
-        <span class="material-icons close" @click.stop="edit = true" v-if="user.edit_mode">edit</span>
+        <span class="material-icons" @click.stop="edit = true" v-if="user.edit_mode">edit</span>
 
       </div>
 
-      <h3>{{data.title}}</h3>
+      <h4>{{data.title}}</h4>
 
       <p>{{ data.text.toString().replace(/(<([^>]+)>)/gi, "").slice(0, 150) }}</p>
 
@@ -36,9 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import Tag from "./Tag.vue";
+import Tag from "../travel/Tag.vue";
 import type { PropType } from 'vue'
-import TripPopup from "@/components/travel/TripPopup.vue";
+import TripPopup from "@/components/Mobile/MobileTripPopup.vue";
 import PopupEditActivity from "@/components/admin/PopupEditActivity.vue";
 import {ref} from "vue";
 import {useKioskStore} from "@/stores/kiosk";
@@ -83,6 +83,7 @@ const props = defineProps({
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border: 1px solid #E7ECF3;
     border-radius: 20px;
+    background-color: #ececec;
     padding: 15px;
   }
   @include lg{
@@ -93,14 +94,27 @@ const props = defineProps({
     background-color: #E7ECF3;
   }
 
-  h3{
+  h4{
     margin: 0;
-   font-size: 22px;
+    font-size: 17px;
+    font-weight: bold;
+
+
+    @include md{
+      font-weight: bold;
+      font-size: 20px;
+
+    }
 
   }
 
   p{
    margin-top: 3px;
+    display: none;
+
+    @include lg{
+      display: block;
+    }
   }
 
 
@@ -144,7 +158,6 @@ const props = defineProps({
 
 
     .material-icons{
-      background-color: #c2c9d2;
       padding: 3px;
       border-radius: 2px;
     }

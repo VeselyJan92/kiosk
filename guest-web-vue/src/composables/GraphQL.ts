@@ -25,6 +25,9 @@ export function getGraphQLClient(){
 
     const token = store.token
 
+
+    console.log(token)
+
     if (token)
         headers["Authorization"] = "Bearer " + token
 

@@ -20,21 +20,19 @@
 
 </template>
 
-<script>
-export default {
-  name: "TextInfoBox"
-}
+<script setup>
 </script>
 
 <style scoped lang="scss">
 
 .text-container {
+  width: 100%;
   padding: 10px;
-  //background: #F9F9F9;
   border: 1px solid #EAEAEA;
+  background-color: #F9F9F9;
 
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
+  border-radius: 10px;
+
 
   div{
     overflow-y: scroll;

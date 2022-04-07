@@ -4,13 +4,13 @@ import cz.cvut.veselj57.dt.graphql.model.HotelQL
 import cz.cvut.veselj57.dt.graphql.model.TripCategoryQL
 import cz.cvut.veselj57.dt.graphql.model.TripQL
 import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
+import cz.cvut.veselj57.dt.graphql.mutations.TravelInfoMutation
 import cz.cvut.veselj57.dt.graphql.mutations.TripMutation
-import cz.cvut.veselj57.dt.toJsonElement
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.json.*
-import kotlin.test.assertNotNull
+
 
 
 suspend fun registerHotel(client:HttpClient, hotel: HotelMutation.RegisterHotel): HotelQL {
@@ -52,12 +52,6 @@ suspend fun modifyCategories(
     }
 }
 
-
-
-
-
-
-
 suspend fun upsertTrip(
     client:HttpClient,
     trip: TripMutation.UpsertTrip,
@@ -72,6 +66,23 @@ suspend fun upsertTrip(
         put("input", Json.encodeToJsonElement(trip))
     }
 }
+
+
+suspend fun upsertTravelInfo(
+    client:HttpClient,
+    info: TravelInfoMutation.UpsertTravelInfo,
+    token: String?= null,
+): TraveIn {
+
+    return graphQLRequestTyped(client,
+        "mutation (\$input: UpsertTripInput!) { upsertTrip(input: \$input){ _id hotel_id title text imgs tags } }",
+        topLevelName = "upsertTrip",
+        token = token
+    ){
+        put("input", Json.encodeToJsonElement(info))
+    }
+}
+mutation ($input: UpsertTravelInfoInput!) { upsertTravelInfo(input: $input){ _id hotel_id title text } }
 
 suspend fun getHotelData(
     client:HttpClient,

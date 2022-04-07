@@ -3,17 +3,21 @@ package cz.cvut.veselj57.dt.repository
 import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.entities.TripEntity
 import cz.cvut.veselj57.dt.entities.TripCategoryEntity
+import cz.cvut.veselj57.dt.id
 import cz.cvut.veselj57.dt.persistence.MongoDB
+import org.bson.types.ObjectId
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kmongo.coroutine.updateOne
 
 class TripDAO(): KoinComponent {
 
     val db by inject<MongoDB>()
 
     val imageDAO by inject<ImageDAO>()
+    val hotelDAO by inject<HotelDAO>()
 
     suspend fun insertTrip(
         hotelId: String,
@@ -67,7 +71,57 @@ class TripDAO(): KoinComponent {
         }else{
             db.trips.find().toList()
         }
+    }
 
+
+    suspend fun upsertTrip(trip: TripEntity, addImages: List<ByteArray> = listOf()): TripEntity {
+        val oldTrip = getTrip(trip._id)
+
+        val newImageIds = addImages.map {
+            imageDAO.putImage(it)
+        }
+
+        trip.imgs = newImageIds + trip.imgs
+
+        if (oldTrip == null){
+            trip._id = db.trips.insertOne(trip).insertedId.asString().value
+        } else{
+            oldTrip.imgs.subtract(trip.imgs).forEach{
+                imageDAO.deleteImage(it)
+            }
+
+            db.trips.updateOne(trip)
+        }
+
+        return trip
+    }
+
+
+    suspend fun updateTripCategories(hotel: HotelEntity, trip: TripEntity, categories: List<String>){
+        hotel.trip_categories.forEach {
+            it.trips_ids = it.trips_ids.toMutableSet().apply {
+                if (categories.contains(it._id))
+                    add(trip._id)
+                else
+                    remove(trip._id)
+            }.toList()
+        }
+
+        db.hotels.updateOne(hotel)
+    }
+
+    suspend fun deleteTrip(trip: TripEntity){
+        val hotel = db.hotels.findOne(HotelEntity::_id  eq trip.hotel_id)
+
+        if (hotel != null){
+            hotel.trip_categories.forEach {
+                it.trips_ids = it.trips_ids.toMutableList().apply { remove(trip._id) }
+            }
+
+            db.hotels.updateOne(hotel)
+        }
+
+        db.trips.deleteOneById(ObjectId(trip._id))
     }
 
 

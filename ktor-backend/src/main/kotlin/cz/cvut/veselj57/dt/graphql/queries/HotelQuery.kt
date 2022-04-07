@@ -32,7 +32,9 @@ import org.koin.core.component.inject
 /**
  * Provide Search options for book data
  */
-class HotelQuery(private val hotelDAO: HotelDAO) : Query {
+class HotelQuery(
+    private val  hotelDAO: HotelDAO
+) : Query {
 
     @GraphQLDescription("Return list of books based on BookSearchParameter options")
     @Suppress("unused")

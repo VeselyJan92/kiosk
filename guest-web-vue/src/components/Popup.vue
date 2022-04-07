@@ -6,7 +6,8 @@
 
       <div class="title">
         <h3>{{props.title}}</h3>
-        <span class="material-icons close" @click="$emit('close')">close</span>
+        <div @click.stop="$emit('close')" class="close"> <span class="material-icons " >close</span>Zpět</div>
+
       </div>
 
       <slot></slot>
@@ -49,11 +50,18 @@ onUnmounted(()=>{
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .close{
+  height: 50px;
+  width: 150px;
+  background-color: #c2c9d2;
+  border-radius: 5px;
   float: right;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .popup-container{
@@ -61,13 +69,13 @@ onUnmounted(()=>{
   position: fixed;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 
   top: 0;
   left: 0;
 
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 
   background-color: rgba(0, 0, 0, 0.4);
 }
@@ -75,9 +83,8 @@ onUnmounted(()=>{
 
 
 .popup-content{
-  margin-top: 10px;
   width: calc(min(600px, 100%) - 20px);
-  max-height: calc(100% - 75px);
+  max-height: calc(100% - 50px);
   background-color: #F4F5F6;
   border-radius: 20px;
   padding: 25px;
@@ -90,6 +97,9 @@ onUnmounted(()=>{
   align-items: center;
 }
 
+</style>
+
+<style>
 .popup-footer{
   display: flex;
   justify-content: flex-end;
@@ -100,7 +110,4 @@ onUnmounted(()=>{
 
   gap: 10px;
 }
-
-
-
 </style>

@@ -1,12 +1,9 @@
 <template>
 <div class="blog-post-banner">
 
-  <img src="/static/pecka.jpg">
-
   <h4>{{ data.title }}</h4>
 
   <p>{{data.text.toString().replace(/(<([^>]+)>)/gi, "").slice(0, 150)}}</p>
-
 
 </div>
 </template>
@@ -24,12 +21,16 @@ const props = defineProps({data: Object})
   margin: 5px;
   padding: 15px;
   border-radius: 10px;
-  max-width: 300px;
   display: flex;
   flex-direction: column;
 
+  &:hover{
+    background-color: #E7ECF3;
+    cursor: pointer;
+  }
+
   @include md{
-    background: #FFFFFF;
+    background-color: #ececec;
     border: 1px solid #E7ECF3;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 

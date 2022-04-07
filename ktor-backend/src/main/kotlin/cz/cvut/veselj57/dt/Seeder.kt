@@ -2,7 +2,7 @@ package cz.cvut.veselj57.dt
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.thedeanda.lorem.LoremIpsum
-import cz.cvut.veselj57.dt.entities.BlogPostEntity
+import cz.cvut.veselj57.dt.entities.TravelInfoEntity
 import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.entities.TripCategoryEntity
 import cz.cvut.veselj57.dt.persistence.MongoDB
@@ -10,7 +10,6 @@ import cz.cvut.veselj57.dt.repository.TripDAO
 import io.ktor.util.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.litote.kmongo.newId
 
 
 val id = "624837e9e377490f7e93f3e5"
@@ -31,8 +30,6 @@ class Seeder(): KoinComponent {
             javaClass.classLoader.getResource("seed/pecka.jpg")!!.openStream().readAllBytes(),
             javaClass.classLoader.getResource("seed/skiresort.jpg")!!.openStream().readAllBytes(),
             javaClass.classLoader.getResource("seed/relax.jpg")!!.openStream().readAllBytes(),
-            javaClass.classLoader.getResource("seed/bike.jpg")!!.openStream().readAllBytes(),
-            javaClass.classLoader.getResource("seed/castle.jpg")!!.openStream().readAllBytes()
         )
 
 
@@ -64,7 +61,7 @@ class Seeder(): KoinComponent {
 
 
         repeat(4){
-            db.posts.insertOne(BlogPostEntity(
+            db.posts.insertOne(TravelInfoEntity(
                 hotel_id = id,
                 title = lorem.getTitle(4, 9),
                 text = lorem.getHtmlParagraphs(1, 2)

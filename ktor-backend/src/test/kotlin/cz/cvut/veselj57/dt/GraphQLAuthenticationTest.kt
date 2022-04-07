@@ -5,7 +5,7 @@ import cz.cvut.veselj57.dt.gql_model.login
 import cz.cvut.veselj57.dt.gql_model.modifyCategories
 import cz.cvut.veselj57.dt.gql_model.registerHotel
 import cz.cvut.veselj57.dt.graphql.model.TripCategoryQL
-import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
+import cz.cvut.veselj57.dt.utils.TestSeeder
 import io.ktor.client.statement.*
 import io.ktor.server.testing.*
 
@@ -14,7 +14,6 @@ import kotlinx.serialization.json.*
 import kotlin.test.*
 
 
-suspend fun HttpResponse.toJsonElement()= Json.parseToJsonElement(this.bodyAsText())
 
 
 
@@ -55,7 +54,6 @@ class GraphQLAuthenticationTest {
 
         try {
              modifyCategories(client, categories)
-
         }catch (e: Exception){
             assertContains(e.toString(), "Unauthorized")
             return@testApplication

@@ -7,6 +7,9 @@ import io.ktor.http.*
 import kotlinx.serialization.json.*
 
 
+suspend fun HttpResponse.toJsonElement()= Json.parseToJsonElement(this.bodyAsText())
+
+
 inline fun <reified T> JsonElement.decode(): T {
     return Json.decodeFromJsonElement(this)
 }
@@ -50,8 +53,13 @@ suspend inline fun <reified T> graphQLRequestTyped(
 
     val data = response.jsonObject["data"]?.jsonObject?.get(topLevelName)
 
-    if (data != null)
-        return Json.decodeFromJsonElement(data)
-    else
+    val errors = response.jsonObject["errors"]
+
+    if (errors != null)
         throw Exception(response.jsonObject["errors"].toString())
+
+    if (data == null)
+        throw Exception("Missing data")
+    else
+        return Json.decodeFromJsonElement(data)
 }

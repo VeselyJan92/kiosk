@@ -25,10 +25,9 @@
 </template>
 
 <script setup>
-import Tag from "./Tag.vue";
 import Popup from "@/components/Popup.vue";
+import Tag from "../travel/Tag.vue";
 
-console.log('xxxxxxx')
 
 const props = defineProps({data: Object})
 
@@ -39,10 +38,6 @@ const emit = defineEmits(["close"])
 
 <style scoped lang="scss">
 
-.close{
-  float: right;
-  cursor: pointer;
-}
 
 h1{
   margin-bottom: 0px;
@@ -55,6 +50,7 @@ h1{
 }
 
 .location{
+
   display: flex;
   align-items: center;
   gap: 10px
@@ -63,6 +59,7 @@ h1{
 
 .intro-img{
   width: 100%;
+  aspect-ratio: 5/3;
   border-radius: 20px;
   margin-top: 10px;
   margin-bottom: 20px;
@@ -78,6 +75,8 @@ h1{
   img{
     width: 100%;
     border-radius: 20px;
+
+    height: 200px;
   }
 }
 

@@ -7,6 +7,7 @@ import {gql} from "graphql-request";
 export const useKioskStore  = defineStore("kiosk_store", {
   state: () => ({
     data: null,
+    hotel_id: "",
 
     state: {selectedCategory:0}
   }),
@@ -16,24 +17,29 @@ export const useKioskStore  = defineStore("kiosk_store", {
     },
 
     getCategoryById(state) {
-      return (id: String) => this.data.categories.find(item => item.id == id)
+      return (id: String) => state.data.categories.find(item => item.id == id)
     },
 
-
+    getTripById(state){
+      return (id: String) => this.state.data.categories.flat().find(trip => trip._id == id)
+    }
   },
   actions: {
+    setHotelId(id: string){
+      this.hotel_id = id
+    },
+
 
     selectCategory(index: number){
       this.state.selectedCategory = index
     },
 
     getSelectedCategoryTrips(){
-      console.log("getSelectedCategoryTrips")
 
-      return this.data.trip_categories[this.state.selectedCategory].trips
+      return this.data.trip_categories[this.state.selectedCategory]?.trips ?? []
     },
 
-    async reload_kiosk(id: string){
+    async reload_kiosk(){
       const request = gql`query($id: String!) {
        searchHotels(id: $id) {
         blog_posts{
@@ -47,7 +53,7 @@ export const useKioskStore  = defineStore("kiosk_store", {
        }
       }
       `
-      const response = await (getGraphQLClient().request(request,{id : id})).catch(e => console.log(e))
+      const response = await (getGraphQLClient().request(request,{id : this.hotel_id})).catch(e => console.log(e))
 
       this.data = response.searchHotels
     }
