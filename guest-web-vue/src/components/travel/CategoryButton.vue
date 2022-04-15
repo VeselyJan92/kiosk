@@ -12,7 +12,7 @@
 
 <script setup>
 
-import {useKioskStore} from "@/stores/kiosk";
+import {useHotelStore} from "@/stores/hotel";
 import PopupEditCategory from "@/components/admin/PopupEditCategory.vue";
 import {ref} from "vue";
 import {useUserStore} from "@/stores/user";
@@ -20,7 +20,7 @@ import {useUserStore} from "@/stores/user";
 const props = defineProps({category: Object, selected:Boolean})
 
 
-const store = useKioskStore()
+const store = useHotelStore()
 
 const user = useUserStore()
 
@@ -59,7 +59,6 @@ const edit = ref(false)
   &:hover{
     background-color: #E7ECF3;
     cursor: pointer;
-
   }
 
   background: #ececec;

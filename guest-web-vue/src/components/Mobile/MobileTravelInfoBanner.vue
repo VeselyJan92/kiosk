@@ -1,5 +1,5 @@
 <template>
-<div class="blog-post-banner">
+<div class="blog-post-banner" @click.stop="edit">
 
   <h4>{{ data.title }}</h4>
 
@@ -9,8 +9,16 @@
 </template>
 
 <script setup>
+import router from "@/router";
+import {useHotelStore} from "@/stores/hotel";
 
 const props = defineProps({data: Object})
+const hotel = useHotelStore()
+
+function edit(){
+  //router.push({name: 'edit-travel-info', params:{id:hotel.hotel_id, infoId: props.data._id}})
+  router.push({name: 'travel-info', params:{id:hotel.hotel_id, infoId: props.data._id}})
+}
 
 </script>
 

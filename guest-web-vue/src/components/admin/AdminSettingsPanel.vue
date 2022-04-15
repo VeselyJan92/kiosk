@@ -6,7 +6,7 @@
 
   <div class="admin-settings-panel">
 
-    <div>
+    <div @click.stop="newTravelInfo">
       <span class="material-icons md-24">add</span>
       <span>Článek</span>
     </div>
@@ -50,7 +50,16 @@ import PopupEditActivity from "@/components/admin/PopupEditActivity.vue";
 import {ref} from "vue";
 import PopupEditCategory from "@/components/admin/PopupEditCategory.vue";
 import {useUserStore} from "@/stores/user";
+import {useHotelStore} from "@/stores/hotel";
+import { useRouter } from 'vue-router'
 
+
+const hotel = useHotelStore()
+const router = useRouter()
+
+function newTravelInfo(){
+  router.push({name: "edit-travel-info", params: {id: hotel.hotel_id, infoId: "new"}})
+}
 
 const insertTripPopup = ref(false)
 const editCategoryPopup = ref(false)
@@ -70,6 +79,7 @@ function logout(){
 <style scoped lang="scss">
 
 .admin-settings-panel{
+  width: 100%;
   margin-top: 20px;
   display: flex;
   flex-direction: row;

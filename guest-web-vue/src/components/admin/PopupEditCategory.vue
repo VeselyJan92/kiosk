@@ -25,12 +25,12 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 
 import Popup from "@/components/Popup.vue";
-import {useKioskStore} from "@/stores/kiosk";
+import {useHotelStore} from "@/stores/hotel";
 import {onBeforeMount, ref} from "vue";
 import {gql} from "graphql-request";
 import {getGraphQLClient, graphQLClient} from "@/composables/GraphQL";
 
-const store = useKioskStore()
+const store = useHotelStore()
 
 const props = defineProps({ category:{ type: Object, default:{_id: null, name: ""}}})
 

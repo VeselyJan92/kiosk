@@ -6,7 +6,7 @@
 
       <div class="title">
         <h3>{{props.title}}</h3>
-        <div @click.stop="$emit('close')" class="close"> <span class="material-icons " >close</span>Zpět</div>
+        <div @click.stop="close" class="close"> <span class="material-icons " >close</span>Zpět</div>
 
       </div>
 
@@ -22,9 +22,23 @@
 
 <script setup>
 
-import {onMounted, onUnmounted} from "vue";
 
-const props = defineProps({title: String})
+
+import {onMounted, onUnmounted} from "vue";
+import router from "@/router";
+
+const props = defineProps({title: String, route: Boolean})
+const emit = defineEmits(["close"])
+
+function close(){
+  if (props.route){
+    console.log("back")
+    router.back()
+  }else {
+    emit('close')
+  }
+
+}
 
 
 onMounted(()=>{
@@ -50,7 +64,11 @@ onUnmounted(()=>{
 
 </script>
 
+
+
 <style lang="scss" scoped>
+
+
 
 .close{
   height: 50px;

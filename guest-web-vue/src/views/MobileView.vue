@@ -1,34 +1,26 @@
 <template>
-  <router-view ></router-view>
+  <router-view></router-view>
 
   <div v-if="kiosk.data">
 
-
     <Header></Header>
 
-    <div class="content-width">
-      <AdminSettingsPanel style="margin-top: 25px" v-if="user.edit_mode"></AdminSettingsPanel>
-    </div>
+    <div class="content-width" style="margin: 0 auto">
+      <AdminSettingsPanel c style="margin-top: 25px" v-if="user.edit_mode"></AdminSettingsPanel>
 
-
-    <div class="content" style="margin-top: 20px">
-      <div class="accommodation-content content-width">
-        <TextInfoBox class="accommodation-text"></TextInfoBox>
-        <Map :latitude="14.41790" :longitude="50.12655"></Map>
+      <div class="accommodation-content">
+        <TextInfoBox class="accommodation-text" :text="kiosk.data.accommodation_text"></TextInfoBox>
+        <img src="/static/hotel.jpg">
       </div>
 
-    </div>
 
-    <div class="content " style="margin-top: 20px; margin-bottom: 100px">
-      <div class="content-width footer travel-content-container">
-
+      <div class="footer travel-content-container">
 
         <Title title="Nápady pro vaši dovolenou"></Title>
 
         <div class="blog-posts">
-          <BlogPostBanner v-for="item in kiosk.data.blog_posts" :data="item"></BlogPostBanner>
+          <BlogPostBanner v-for="item in kiosk.data.travel_info" :data="item"></BlogPostBanner>
         </div>
-
 
         <div class="mobile-trips" style="margin-top: 20px">
 
@@ -59,7 +51,6 @@
           </div>
 
 
-
         </div>
 
         <div class="desktop-trips">
@@ -82,6 +73,7 @@
 
 
       </div>
+
     </div>
 
 
@@ -98,22 +90,20 @@ import BlogPostBanner from "../components/Mobile/MobileTravelInfoBanner.vue";
 import CategoryButton from "../components/travel/CategoryButton.vue";
 import TripBanner from "../components/Mobile/MobileTripBanner.vue";
 import Title from "../components/Title.vue";
-import {useKioskStore} from "@/stores/kiosk";
+import {useHotelStore} from "@/stores/hotel";
 import {onBeforeMount} from "vue";
 import AdminSettingsPanel from "@/components/admin/AdminSettingsPanel.vue";
 import {useRoute} from "vue-router";
 import {useUserStore} from "@/stores/user";
-import Map from "@/components/Mobile/Map.vue";
 
-const kiosk = useKioskStore()
+const kiosk = useHotelStore()
+
+
+
 const user = useUserStore()
 const route = useRoute()
 
-onBeforeMount(async () => {
-  kiosk.setHotelId(route.params.id)
-
-  await kiosk.reload_kiosk()
-});
+console.log("MobileView")
 
 </script>
 
@@ -129,23 +119,36 @@ onBeforeMount(async () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: 400px;
 
-  gap: 20px;
 
   @include xl {
     flex-direction: row;
-    height: 400px;
-    gap: 0px;
+  }
+
+  > div{
+    height: 100%;
   }
 
 
-  > div {
-    flex: 1;
-  }
 
-  > div {
-    height: 400px;
-    //border-radius: 20px;
+  img{
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+
+    filter: brightness(0.9) ;
+
+
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    @include md{
+      display: block;
+    }
+
   }
 
 
@@ -223,7 +226,7 @@ onBeforeMount(async () => {
 .mobile-trips {
   display: block;
 
-  h2{
+  h2 {
     margin-top: 20px;
   }
 

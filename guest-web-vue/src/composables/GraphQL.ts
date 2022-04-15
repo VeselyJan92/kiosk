@@ -1,5 +1,5 @@
 import {GraphQLClient} from "graphql-request";
-import {useKioskStore} from "@/stores/kiosk";
+import {useHotelStore} from "@/stores/hotel";
 import {useUserStore} from "@/stores/user";
 
 

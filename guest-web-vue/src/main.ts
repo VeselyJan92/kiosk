@@ -5,15 +5,18 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 
-import "bootstrap/dist/css/bootstrap.min.css"
-import "https://api.mapy.cz/loader.js"
 
+
+
+import "bootstrap/dist/css/bootstrap.min.css"
+import {useHotelStore} from "@/stores/hotel";
 
 
 const app = createApp(App)
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
+
 app.use(pinia)
 
 app.use(router)

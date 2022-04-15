@@ -15,6 +15,7 @@ const props = defineProps({ title: String })
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 h1{

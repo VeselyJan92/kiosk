@@ -20,21 +20,6 @@ onMounted(()=>{
 
 
 <style scoped lang="scss">
-img{
-  display: none;
-  max-width: 100%;
-  max-height: 100%;
 
-  filter: brightness(0.9) ;
-
-
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-
-  @include md{
-    display: block;
-  }
-
-}
 
 </style>

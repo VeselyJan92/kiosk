@@ -1,9 +1,9 @@
 <template>
   <PopupEditActivity v-if="edit" @close="edit = false"  :trip-id="data._id"></PopupEditActivity>
 
-  <TripPopup v-if="show" @close="show = false" :data="data"></TripPopup>
+  <TripPopup v-if="show" @close="show = false" :trip-id="data._id"></TripPopup>
 
-  <div class="trip-banner"  @click="show = true">
+  <div class="trip-banner"  @click.stop="$router.push({name: 'hotel-trip', params:{id: data.hotel_id, tripId: data._id}})">
 
     <img :src="data.main_img_url">
 
@@ -40,28 +40,20 @@ import Tag from "../travel/Tag.vue";
 import type { PropType } from 'vue'
 import TripPopup from "@/components/Mobile/MobileTripPopup.vue";
 import PopupEditActivity from "@/components/admin/PopupEditActivity.vue";
-import {ref} from "vue";
-import {useKioskStore} from "@/stores/kiosk";
+import {onBeforeMount, ref} from "vue";
 import {useUserStore} from "@/stores/user";
 
 const edit = ref(false)
 const show = ref(false)
+console.log("Banner")
 
 const user = useUserStore()
 
-interface Trip  {
-  author: string;
-  date: string;
-  title: string;
-  text: string;
-  main_img: string;
-  imgs: [String];
-  tags: [String];
-}
 
-const props = defineProps({
-  data: Object as PropType<Trip>,
-})
+const props = defineProps({data: Object})
+
+
+
 
 
 </script>

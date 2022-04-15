@@ -72,18 +72,11 @@
 
 <script setup lang="ts">
 
+
+
 import {QuillEditor} from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import Multiselect from 'vue-multiselect'
-
-
-type Data = {
-  id: String
-  text: String
-  title: String
-  imgs: [string]
-  tags: string
-}
 
 
 import Popup from "@/components/Popup.vue";
@@ -91,12 +84,14 @@ import {onBeforeMount, ref} from "vue";
 import {encode} from "base64-arraybuffer";
 import {getGraphQLClient, graphQLClient} from "@/composables/GraphQL";
 import {gql} from "graphql-request";
-import {useKioskStore} from "@/stores/kiosk";
+import {useHotelStore} from "@/stores/hotel";
 
-const store = useKioskStore()
+const store = useHotelStore()
 const props = defineProps({ tripId: String })
 const emit = defineEmits(['close'])
 
+
+console.log("yyyyyyyyyyyyyyy")
 
 const selectableCategories =  store.data.trip_categories.map(category => ({name: category.name, _id: category._id}))
 
@@ -104,6 +99,7 @@ const selectableCategories =  store.data.trip_categories.map(category => ({name:
 const selected =  ref([])
 
 const data = ref(null)
+
 
 
 onBeforeMount(async ()=>{

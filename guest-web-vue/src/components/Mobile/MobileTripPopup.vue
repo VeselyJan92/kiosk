@@ -1,5 +1,5 @@
 <template>
-    <Popup :title="data.title" @close="emit('close')">
+    <Popup :title="data.title" @close="emit('close')" :route="true">
 
       <div class="location">
         <span class="material-icons md-24">place</span>
@@ -11,7 +11,6 @@
       <div class="tags">
         <Tag v-for="item in data.tags" :data="{name: item, color: '#c2c9d2'}"></Tag>
       </div>
-
 
       <img :src="data.main_img_url" class="intro-img">
 
@@ -27,20 +26,10 @@
 <script setup>
 import Tag from "../travel/Tag.vue";
 import Popup from "@/components/Popup.vue";
-import {useKioskStore} from "@/stores/kiosk";
 
-
-const store = useKioskStore()
-
-
-const data = store.getTripById()
-
-
-
-const props = defineProps({data: Object})
+const props = defineProps({data: Object, route: Boolean })
 
 const emit = defineEmits(["close"])
-
 
 </script>
 
