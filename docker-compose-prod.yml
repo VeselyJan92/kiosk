@@ -1,7 +1,7 @@
 version: "3.9"  # optional since v1.27.0
 services:
   ktor:
-    build: ./backend
+    image: janvesely92/dt-backend
     ports:
       - "127.0.0.1:4000:8080"
     environment:
@@ -15,7 +15,7 @@ services:
     volumes:
       - ./persist/mongodb:/data/db
   vue:
-    build: ./frontend
+    image: janvesely92/dt-frontend
     ports:
       - "127.0.0.1:3000:80"
     depends_on:
