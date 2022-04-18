@@ -12,9 +12,14 @@ before_script:
 build-frontend:
   stage: build
   script:
-    - docker build -t janvesely92-dt-frontend ./frontend
+    - docker build -t janvesely92/dt-frontend ./frontend
+    - docker login
+    - docker push janvesely92/dt-frontend
+
 
 build-backend:
   stage: build
   script:
-    - docker build -t janvesely92-dt-backend ./backend
+    - docker build -t janvesely92/dt-backend ./backend
+    - docker login
+    - docker push janvesely92/dt-backend
