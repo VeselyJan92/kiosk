@@ -6,8 +6,16 @@ variables:
 services:
   - docker:19.03.12-dind
 
+stages:
+  - build
+  - deploy
+
 before_script:
-  - docker info
+  - echo "$DEPLOY_SERVER_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - eval "$(ssh-agent -s)"
+  - ssh-add ~/.ssh/id_rsa
+  - ssh-keyscan -H '89.221.219.22' >> ~/.ssh/known_hosts
 
 build-frontend:
   stage: build
@@ -23,3 +31,18 @@ build-backend:
     - docker build -t janvesely92/dt-backend ./backend
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - docker push janvesely92/dt-backend
+
+
+deploy:
+  stage: deploy
+  script:
+    - scp ./docker-compose-prod.yml root@89.221.219.22/data/travel-info/app/docker-compose.yml
+    - ssh root@89.221.219.22 docker-compose pull -f /data/travel-info/app/docker-compose.yml 
+    - ssh root@89.221.219.22 docker-compose up -d -f /data/travel-info/app/docker-compose.yml 
+    - ssh root@89.221.219.22 docker image prune -af
+
+
+
+
+
+
