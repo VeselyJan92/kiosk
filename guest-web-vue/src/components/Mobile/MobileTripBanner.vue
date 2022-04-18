@@ -1,9 +1,6 @@
 <template>
-  <PopupEditActivity v-if="edit" @close="edit = false"  :trip-id="data._id"></PopupEditActivity>
 
-  <TripPopup v-if="show" @close="show = false" :trip-id="data._id"></TripPopup>
-
-  <div class="trip-banner"  @click.stop="$router.push({name: 'hotel-trip', params:{id: data.hotel_id, tripId: data._id}})">
+  <div class="trip-banner"  @click.stop="show">
 
     <img :src="data.main_img_url">
 
@@ -16,7 +13,7 @@
 
         <span class="date">24. 01. 2022</span>
 
-        <span class="material-icons" @click.stop="edit = true" v-if="user.edit_mode">edit</span>
+        <span class="material-icons" @click.stop="edit" v-if="user.edit_mode">edit</span>
 
       </div>
 
@@ -29,32 +26,24 @@
         <Tag v-for="item in data.tags" :data="{name: item, color: '#eef3e7'}"></Tag>
       </div>
 
-
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import Tag from "../travel/Tag.vue";
-import type { PropType } from 'vue'
-import TripPopup from "@/components/Mobile/MobileTripPopup.vue";
-import PopupEditActivity from "@/components/admin/PopupEditActivity.vue";
-import {onBeforeMount, ref} from "vue";
 import {useUserStore} from "@/stores/user";
-
-const edit = ref(false)
-const show = ref(false)
-console.log("Banner")
-
-const user = useUserStore()
-
+import {useRouter} from "vue-router";
 
 const props = defineProps({data: Object})
 
+const user = useUserStore()
 
+const router = useRouter()
+const params = {id: props.data.hotel_id, tripId: props.data._id}
 
-
+const show = () => router.push({name: 'hotel-trip', params });
+const edit = () => router.push({name: 'edit-hotel-trip', params });
 
 </script>
 

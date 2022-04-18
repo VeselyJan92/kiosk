@@ -1,5 +1,5 @@
 <template>
-<div class="blog-post-banner">
+<div class="travel-info-banner">
 
   <h4>{{ data.title }}</h4>
 
@@ -16,7 +16,7 @@ const props = defineProps({data: Object})
 
 <style scoped lang="scss">
 
-.blog-post-banner {
+.travel-info-banner {
   margin: 5px;
   padding: 15px;
   border-radius: 10px;

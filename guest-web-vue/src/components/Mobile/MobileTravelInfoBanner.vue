@@ -1,5 +1,5 @@
 <template>
-<div class="blog-post-banner" @click.stop="edit">
+<div class="travel-info-banner" @click.stop="edit">
 
   <h4>{{ data.title }}</h4>
 
@@ -24,7 +24,7 @@ function edit(){
 
 <style scoped lang="scss">
 
-.blog-post-banner {
+.travel-info-banner {
   background: #ebebeb;
   margin: 5px;
   padding: 15px;

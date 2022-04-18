@@ -4,7 +4,6 @@ import {gql} from "graphql-request";
 import type {HotelDTO, TravelInfoDTO} from "graphql-types";
 
 
-
 export type RootType = {
   data: HotelDTO | null
   hotel_id: string | null

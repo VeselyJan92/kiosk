@@ -1,18 +1,17 @@
 <template>
 
-  <Popup title="Upravit aktivitu" v-if="data" @close="emit('close')">
+  <Popup title="Upravit aktivitu" v-if="data" :route="true">
 
 
     <form @submit="submit">
       <div class="mb-3">
-        <label for="title">Titulek</label>
-        <input class="form-control" id="title" placeholder="Sleva pro děti" v-model="data.title">
+        <label>Jméno výletu</label>
+        <input id="popup-edit-trip-title" class="form-control" placeholder="Výlety na Sněžku" v-model="data.title">
       </div>
 
       <div class="mb-3">
-        <label for="title">Obsah</label>
-        <quill-editor theme="snow" style="background-color: white" v-model:content="data.text"
-                      content-type="html"></quill-editor>
+        <label>Text</label>
+        <quill-editor id="popup-edit-trip-text" theme="snow" style="background-color: white" v-model:content="data.text" content-type="html"></quill-editor>
       </div>
 
 
@@ -20,15 +19,17 @@
 
         <div class="row">
           <div class="col">
-            <label for="x">Tagy</label>
+            <label>Tagy</label>
 
-            <input  class="form-control" v-model="data.tags" placeholder="Sleva pro děti" style="height: 42px">
+            <input id="popup-edit-trip-tags" class="form-control" v-model="data.tags" placeholder="Hory, Turistika" style="height: 42px">
           </div>
 
           <div class="col">
-            <label for="x">Kategorie</label>
+            <label>Kategorie</label>
 
-            <multiselect style="height: 40px"
+            <multiselect
+                style="height: 40px"
+                id="popup-edit-trip-categories"
                 :multiple="true"
                 :close-on-select="true"
                  track-by="_id"
@@ -42,9 +43,9 @@
       </div>
 
       <div class="mb-3">
-        <label for="inputGroupFile02">Upload</label>
+        <label>Upload</label>
         <div class="input-group ">
-          <input type="file" class="form-control" id="inputGroupFile02" @change="upload">
+          <input type="file" class="form-control" id="popup-edit-trip-imgs" @change="upload">
         </div>
       </div>
 
@@ -59,7 +60,7 @@
 
       <div class="popup-footer">
         <button type="button" class="btn btn-danger" @click="deleteTrip">Smazat</button>
-        <button type="submit" class="btn btn-primary">Uložit</button>
+        <button type="submit" class="btn btn-primary" id="popup-edit-trip-submit" >Uložit</button>
       </div>
 
     </form>
@@ -85,13 +86,16 @@ import {encode} from "base64-arraybuffer";
 import {getGraphQLClient, graphQLClient} from "@/composables/GraphQL";
 import {gql} from "graphql-request";
 import {useHotelStore} from "@/stores/hotel";
+import {useRouter} from "vue-router";
+
+
+
+const router = useRouter()
 
 const store = useHotelStore()
-const props = defineProps({ tripId: String })
-const emit = defineEmits(['close'])
+const props = defineProps<{tripId: string | null}>()
 
 
-console.log("yyyyyyyyyyyyyyy")
 
 const selectableCategories =  store.data.trip_categories.map(category => ({name: category.name, _id: category._id}))
 
@@ -101,10 +105,10 @@ const selected =  ref([])
 const data = ref(null)
 
 
-
 onBeforeMount(async ()=>{
 
-  if (props.tripId){
+  if (props.tripId != "new" ){
+
     const mutation = gql`
     query($ids: [String!]){
       searchTrips(ids: $ids) {
@@ -142,9 +146,8 @@ async function deleteTrip(){
 
   await getGraphQLClient().request(mutation, {_id: data.value._id})
 
-  await store.reload_kiosk()
-
-  emit("close")
+  await store.reload()
+  router.back()
 }
 
 
@@ -170,9 +173,9 @@ async function submit(e){
 
   await getGraphQLClient().request(mutation, {input: {id: props.tripId, imgs, tags, categories, title: trip.title, text: trip.text}})
 
-  await store.reload_kiosk()
+  await store.reload()
 
-  emit("close")
+  router.back()
 
   return true
 }

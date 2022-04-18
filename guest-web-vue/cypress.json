@@ -3,8 +3,8 @@
 {
   "pluginsFile": "cypress/plugins/index.js",
   "video": false,
-  "integrationFolder": "cypress/integration",
+  "integrationFolder": "cypress/integration/",
+  "baseUrl": "http://localhost:3000",
   "testFiles": "**/*.*",
-  "baseUrl": "http://localhost:3000/",
   "chromeWebSecurity": false
 }

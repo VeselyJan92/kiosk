@@ -1,5 +1,5 @@
 <template>
-    <Popup :title="data.title" @close="emit('close')" :route="true">
+    <Popup :title="data.title" @close="emit('close')" :route="true" id="trip-popup">
 
       <div class="location">
         <span class="material-icons md-24">place</span>

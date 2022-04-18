@@ -32,7 +32,6 @@ const emit = defineEmits(["close"])
 
 function close(){
   if (props.route){
-    console.log("back")
     router.back()
   }else {
     emit('close')

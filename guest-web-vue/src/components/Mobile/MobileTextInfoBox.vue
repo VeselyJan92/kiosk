@@ -4,14 +4,7 @@
     <h4>Informace o ubytování</h4>
 
     <div>
-      <br>
-      <br>
-      <br>
-
       <p v-html="text"></p>
-
-      <br>
-      <br>
     </div>
   </div>
 
@@ -46,6 +39,13 @@ defineProps({text: String})
     max-height: calc(100% - 40px);
     overflow-y: scroll;
   }
+}
+
+p{
+  font-size: 14px;
+  line-height: 14px;
+  margin-bottom: 0;
+
 }
 
 ::-webkit-scrollbar {

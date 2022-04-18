@@ -8,7 +8,7 @@
 
     <Title title="Nápady pro vaší dovolenou" style="margin-top: 20px"></Title>
 
-    <div class="blog-posts">
+    <div class="travel-info">
       <KioskBlogPostBanner v-for="item in kiosk.data.blog_posts" :data="item"></KioskBlogPostBanner>
     </div>
 
@@ -62,7 +62,7 @@ onBeforeMount(async () => {
   margin-left: 10px;
   margin-right: 10px;
 
-  .blog-posts {
+  .travel-info {
     display: grid;
     grid-template-columns: 1fr 1fr;
 

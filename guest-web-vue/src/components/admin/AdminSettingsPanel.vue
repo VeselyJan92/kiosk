@@ -1,34 +1,28 @@
 <template>
 
-  <PopupEditActivity :trip-id="null" v-if="insertTripPopup" @close="insertTripPopup = false"></PopupEditActivity>
-
-  <PopupEditCategory v-if="editCategoryPopup" @close="editCategoryPopup = false"></PopupEditCategory>
-
   <div class="admin-settings-panel">
 
-    <div @click.stop="newTravelInfo">
-      <span class="material-icons md-24">add</span>
+    <div @click.stop="newInfo">
+      <span class="material-icons md-24" id="add-new-trip-info">add</span>
       <span>Článek</span>
     </div>
 
-    <div @click="insertTripPopup = true">
+    <div @click="newTrip" id="add-new-trip">
       <span class="material-icons md-24">add</span>
       <span>Výlet</span>
     </div>
 
-    <div @click="editCategoryPopup = true">
+    <div @click="newCategory" id="add-new-trip-category">
       <span class="material-icons md-24">add</span>
       <span>Skupina výletů</span>
     </div>
 
-    <div>
+    <div @click.stop="settings">
       <span class="material-icons md-24">settings</span>
       <span>Nastavení</span>
     </div>
 
-
     <div style="flex-grow: 1"></div>
-
 
 
     <div>
@@ -36,33 +30,27 @@
       <span @click.stop="logout">Logout</span>
     </div>
 
-
-
-
-
   </div>
 
 </template>
 
 <script setup >
 
-import PopupEditActivity from "@/components/admin/PopupEditActivity.vue";
-import {ref} from "vue";
-import PopupEditCategory from "@/components/admin/PopupEditCategory.vue";
 import {useUserStore} from "@/stores/user";
 import {useHotelStore} from "@/stores/hotel";
 import { useRouter } from 'vue-router'
 
 
+
+
+
 const hotel = useHotelStore()
 const router = useRouter()
 
-function newTravelInfo(){
-  router.push({name: "edit-travel-info", params: {id: hotel.hotel_id, infoId: "new"}})
-}
-
-const insertTripPopup = ref(false)
-const editCategoryPopup = ref(false)
+const newInfo = () => router.push({name: "edit-travel-info", params: {id: hotel.hotel_id, infoId: "new" }})
+const newTrip = () => router.push({name: 'edit-hotel-trip', params: {id: hotel.hotel_id, tripId: "new" }})
+const newCategory = () => router.push({name: 'edit-hotel-category', params: {id: hotel.hotel_id, categoryId: "new"}})
+const settings = () => router.push({name: 'settings'})
 
 
 const user = useUserStore()

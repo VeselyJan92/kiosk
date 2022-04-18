@@ -1,5 +1,6 @@
 rootProject.name = "backend"
 
+/*
 pluginManagement {
     val kotlin_version: String by settings
     plugins {
@@ -11,6 +12,8 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+*/
 
 
-includeBuild("../graphql-model")
+include(":ktor")
+include(":graphql-client")

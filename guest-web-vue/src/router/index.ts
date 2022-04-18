@@ -4,8 +4,10 @@ import KioskWebView from '@/views/KioskWebSiteView.vue'
 import LoginView from '@/views/LoginView.vue'
 import OnlineView from '@/views/MobileView.vue'
 import TripPopup from '@/components/Mobile/MobileTripPopup.vue'
+import TripEditPopup from '@/components/admin/PopupEditActivity.vue'
 import EditTravelInfo from '@//components/admin/PopupEditTravelInfo.vue'
-import TravelInfoPopup from '@//components/kiosk/KioskTravelInfoPopup.vue'
+import EditCategory from '@//components/admin/PopupEditCategory.vue'
+import TravelInfoPopup from '@//components/Mobile/MobileTravelInfoPopup.vue'
 import Settings from '@//components/admin/PopupSettings.vue'
 import {useHotelStore} from "@/stores/hotel";
 
@@ -50,6 +52,13 @@ const router = createRouter({
 
       children: [
         {
+          name:"edit-hotel-trip",
+          path: 'edit-trip/:tripId',
+          component: TripEditPopup,
+          props: (route) => ({tripId: route.params.tripId})
+        },
+
+        {
           name:"hotel-trip",
           path: 'trip/:tripId',
           component: TripPopup,
@@ -65,7 +74,13 @@ const router = createRouter({
           name:"travel-info",
           path: 'travel-info/:infoId',
           component: TravelInfoPopup,
-          props: (route) => ({id: route.params.infoId})
+          props: (route) => ({data: useHotelStore().getTravelInfoById(route.params.infoId), route: true})
+        },
+        {
+          name:"edit-hotel-category",
+          path: 'edit-travel-category/:categoryId',
+          component: EditCategory,
+          props: (route) => ({id: route.params.categoryId})
         },
         {
           name:"settings",

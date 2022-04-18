@@ -1,10 +1,9 @@
 <template>
   <div>
-    <PopupEditCategory v-if="edit" @close="edit=false" :category="props.category"></PopupEditCategory>
 
     <div class="category" v-bind:class="{selected: selected}">
       <span>{{ props.category.name }}</span>
-      <span class="material-icons" v-if="user.edit_mode" @click.stop="edit=true">edit</span>
+      <span class="material-icons" v-if="user.edit_mode" @click.stop="edit">edit</span>
     </div>
 
   </div>
@@ -13,20 +12,18 @@
 <script setup>
 
 import {useHotelStore} from "@/stores/hotel";
-import PopupEditCategory from "@/components/admin/PopupEditCategory.vue";
-import {ref} from "vue";
 import {useUserStore} from "@/stores/user";
+import {useRouter} from "vue-router";
 
 const props = defineProps({category: Object, selected:Boolean})
-
 
 const store = useHotelStore()
 
 const user = useUserStore()
 
+const router = useRouter()
 
-const edit = ref(false)
-
+const edit = () => router.push({name: 'edit-hotel-category', params: {id: store.hotel_id, categoryId: props.category._id }});
 
 </script>
 

@@ -1,20 +1,20 @@
 <template>
-  <Popup title="Upravit aktivitu" :route="true">
+  <Popup title="Upravit aktivitu" :route="true" id="popup-edit-info">
 
     <form @submit="submit">
       <div class="mb-3">
-        <label for="title">Titulek</label>
-        <input class="form-control" id="title" placeholder="Sleva pro děti" v-model="data.title">
+        <label>Titulek</label>
+        <input class="form-control" placeholder="Jak zařídit skipas" v-model="data.title" id="popup-edit-info-title">
       </div>
 
       <div class="mb-3">
-        <label for="title">Obsah</label>
-        <quill-editor theme="snow" style="background-color: white" v-model:content="data.text" content-type="html"></quill-editor>
+        <label>Text</label>
+        <quill-editor theme="snow" style="background-color: white" v-model:content="data.text" content-type="html" id="popup-edit-info-text"></quill-editor>
       </div>
 
       <div class="popup-footer">
-        <button type="button" class="btn btn-danger" @click="deleteInfo">Smazat</button>
-        <button type="submit" class="btn btn-primary">Uložit</button>
+        <button id="popup-edit-info-delete" type="button" class="btn btn-danger" @click="deleteInfo">Smazat</button>
+        <button id="popup-edit-info-submit" type="submit" class="btn btn-primary">Uložit</button>
       </div>
 
     </form>

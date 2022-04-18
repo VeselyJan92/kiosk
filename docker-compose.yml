@@ -1,0 +1,22 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  ktor:
+    build: ./backend
+    ports:
+      - "127.0.0.1:4000:8080"
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DATABASE=TripKioskDev
+    depends_on:
+      - "mongodb"
+  mongodb:
+    image: mongo
+    volumes:
+      - ./persist/mongodb:/data/db
+  vue:
+    build: ./guest-web-vue
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      - "ktor"

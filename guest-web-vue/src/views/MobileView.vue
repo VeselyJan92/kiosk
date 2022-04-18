@@ -18,7 +18,7 @@
 
         <Title title="Nápady pro vaši dovolenou"></Title>
 
-        <div class="blog-posts">
+        <div class="travel-info">
           <BlogPostBanner v-for="item in kiosk.data.travel_info" :data="item"></BlogPostBanner>
         </div>
 
@@ -124,7 +124,7 @@ console.log("MobileView")
   height: 400px;
 
 
-  @include xl {
+  @include lg {
     flex-direction: row;
   }
 
@@ -135,6 +135,9 @@ console.log("MobileView")
 
 
   img{
+    object-fit: cover;
+    width: 40%;
+    height: 400px;
     display: none;
     max-width: 100%;
     max-height: 100%;
@@ -154,7 +157,7 @@ console.log("MobileView")
 
 }
 
-.blog-posts {
+.travel-info {
   display: flex;
   overflow-x: scroll;
   max-width: 100%;

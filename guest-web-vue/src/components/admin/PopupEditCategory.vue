@@ -1,16 +1,16 @@
 <template>
-  <Popup title="Upravit kategorii"  @close="emit('close')">
+  <Popup title="Upravit kategorii" id="popup-edit-category" :route="true">
 
     <form @submit="submit">
       <div class="mb-3">
-        <label for="title">Titulek</label>
-        <input class="form-control" id="title" placeholder="Sleva pro děti" v-model="name">
+        <label>Název kategorie</label>
+        <input class="form-control" id="popup-edit-category-name" placeholder="Pro rodiny" v-model="name">
       </div>
     </form>
 
     <div class="popup-footer">
-      <button v-if="props?.category?._id" @click.stop="remove" type="button" class="btn btn-danger" @click="remove">Smazat</button>
-      <button type="submit" @click="submit" class="btn btn-primary">{{ props.category._id ? "Uložit" : "Přidat"}}</button>
+      <button v-if="props.id" @click.stop="remove" type="button" class="btn btn-danger" @click="remove">Smazat</button>
+      <button id="popup-edit-category-submit" type="submit" @click="submit" class="btn btn-primary">{{ props.id ? "Uložit" : "Přidat"}}</button>
     </div>
 
   </Popup>
@@ -29,29 +29,26 @@ import {useHotelStore} from "@/stores/hotel";
 import {onBeforeMount, ref} from "vue";
 import {gql} from "graphql-request";
 import {getGraphQLClient, graphQLClient} from "@/composables/GraphQL";
+import type {TripCategoryDTO} from "../../../../graphql-model/build/productionLibrary";
+import {useRouter} from "vue-router";
 
-const store = useHotelStore()
+const props = defineProps<{id: string | null }>()
+const hotel = useHotelStore()
 
-const props = defineProps({ category:{ type: Object, default:{_id: null, name: ""}}})
+const router = useRouter()
 
-const emit = defineEmits(['close'])
+const name = ref(hotel.getCategoryById(props.id)?.name ?? "")
 
-console.log(props.category)
-
-const name = ref(props.category.name)
-
-
-
-function mapCategories(): [Object]{
-  return store.data.trip_categories.map(item => ({_id: item._id, name: item.name, trip_ids: item.trip_ids}))
+function mapCategories(): [TripCategoryDTO]{
+  return hotel.data.trip_categories.map(item => ({_id: item._id, name: item.name, trip_ids: item.trip_ids}))
 }
 
 async function modifyTripCategories(categories: Object[]){
   const mutation = gql`mutation($categories: [TripCategoryInput!]!){modifyTripCategories(categories: $categories){ _id } }`
   await getGraphQLClient().request(mutation, {categories})
-  await store.reload_kiosk()
+  await hotel.reload()
 
-  emit("close")
+  router.back()
 }
 
 async function submit(e: Event){
@@ -59,11 +56,12 @@ async function submit(e: Event){
 
   const categories = mapCategories()
 
-  if (props.category?._id == null){
+
+  if (props.id == "new"){
     categories.push({_id: null, name: name.value, trip_ids: []})
   }else {
 
-    const update = categories.find( item => item._id == props.category._id)
+    const update = categories.find( item => item._id == props.id)
 
     if (update)
       update.name = name.value
@@ -74,7 +72,7 @@ async function submit(e: Event){
 
 
 async function remove(){
-  const categories = mapCategories().filter(category => category._id != props.category._id)
+  const categories = mapCategories().filter(category => category._id != props.id)
   modifyTripCategories(categories)
 }
 
