@@ -15,7 +15,7 @@ services:
     volumes:
       - ./persist/mongodb:/data/db
   vue:
-    build: ./guest-web-vue
+    build: ./frontend
     ports:
       - "127.0.0.1:3000:80"
     depends_on:
