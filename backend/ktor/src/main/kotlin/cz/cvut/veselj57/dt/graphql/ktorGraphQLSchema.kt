@@ -16,7 +16,6 @@
 
 package cz.cvut.veselj57.dt.graphql
 
-import com.expediagroup.graphql.examples.server.ktor.schema.*
 import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 import com.expediagroup.graphql.generator.directives.KotlinDirectiveWiringFactory
@@ -72,7 +71,6 @@ object GraphQLSchema: KoinComponent {
 
     private val queries = listOf(
         TopLevelObject(HotelQuery(get())),
-        TopLevelObject(AdminQuery()),
         TopLevelObject(TripQuery(get())),
     )
     private val mutations = listOf(

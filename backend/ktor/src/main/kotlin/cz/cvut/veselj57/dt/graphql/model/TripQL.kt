@@ -3,6 +3,7 @@ package cz.cvut.veselj57.dt.graphql.model
 import com.expediagroup.graphql.generator.annotations.GraphQLName
 import cz.cvut.veselj57.dt.entities.TripEntity
 import cz.cvut.veselj57.dt.repository.TripDAO
+import cz.cvut.veselj57.dt.services.ServerConfig
 import graphql.schema.DataFetchingEnvironment
 import org.koin.java.KoinJavaComponent.getKoin
 
@@ -20,9 +21,17 @@ data class TripQL(
     var img_urls: List<String>? = null,
 ) {
 
-    fun main_img_url() = "http://192.168.0.2:8080/img/${imgs?.first()}"
+    fun main_img_url(): String {
+        val baseURL = getKoin().get<ServerConfig>().baseUrl
 
-    fun img_urls() = imgs?.map { "http://192.168.0.2:8080/img/$it" } ?: listOf()
+        return baseURL + "/img/${imgs?.first()}"
+    }
+
+    fun img_urls(): List<String> {
+        val baseURL = getKoin().get<ServerConfig>().baseUrl
+
+        return imgs?.map { "$baseURL/img/$it" } ?: listOf()
+    }
 
 
     suspend fun categories(dfe: DataFetchingEnvironment): List<TripCategoryQL> {

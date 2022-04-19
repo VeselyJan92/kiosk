@@ -11,6 +11,7 @@ import cz.cvut.veselj57.dt.repository.TravelInfoTextDAO
 import cz.cvut.veselj57.dt.repository.TripDAO
 import cz.cvut.veselj57.dt.services.AuthService
 import cz.cvut.veselj57.dt.services.NewHotelService
+import cz.cvut.veselj57.dt.services.ServerConfig
 import io.ktor.server.application.*
 import io.ktor.util.*
 import org.koin.core.KoinApplication
@@ -35,8 +36,6 @@ internal class CustomKoinPlugin(internal val koinApplication: KoinApplication) {
         ): CustomKoinPlugin {
             val koinApplication = startKoin(appDeclaration = configure)
 
-            println("LOGGGGGGGGGgggggg")
-
             pipeline.environment?.monitor?.subscribe(ApplicationStopping) {
                 stopKoin()
             }
@@ -51,11 +50,12 @@ internal class CustomKoinPlugin(internal val koinApplication: KoinApplication) {
 
 fun Application.configureKoin(){
 
+    val config = this@configureKoin.environment.config
+
     install(CustomKoinPlugin) {
         val persistence = module {
             single { MongoDBImpl.getFromApplicationConfig(this@configureKoin)  }
         }
-
 
         val core = module {
             single<ImageDAO> { ImageDAO() }
@@ -65,6 +65,7 @@ fun Application.configureKoin(){
             single<AuthService> { AuthService() }
             single<NewHotelService> { NewHotelService() }
             single<KtorGraphQLServer> { KtorGraphQLServer.get() }
+            single<ServerConfig> { ServerConfig(config.property("deployment.base_url").getString()) }
         }
 
         SLF4JLogger()
