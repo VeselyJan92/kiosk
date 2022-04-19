@@ -10,18 +10,6 @@ stages:
   - build
   - deploy
 
-before_script:
-  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
-  - eval $(ssh-agent -s)
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - echo "$DEPLOY_SERVER_PRIVATE_KEY" > ~/.ssh/id_rsa 
-  - chmod 600 ~/.ssh/id_rsa 
-  - ssh-add ~/.ssh/id_rsa
-  - cat ~/.ssh/id_rsa
-  - ssh-add -l
-  - ssh-keyscan -H '89.221.219.22' >> ~/.ssh/known_hosts
-
 build-frontend:
   stage: build
   script:
@@ -41,6 +29,18 @@ build-backend:
 deploy:
   stage: deploy
   script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$DEPLOY_SERVER_PRIVATE_KEY" > ~/.ssh/id_rsa 
+    - chmod 600 ~/.ssh/id_rsa 
+    - ssh-add ~/.ssh/id_rsa
+    - cat ~/.ssh/id_rsa
+    - ssh-add -l
+    - ssh-keyscan -H '89.221.219.22' >> ~/.ssh/known_hosts
+
+  
     - scp ./docker-compose-prod.yml root@89.221.219.22:/data/travel-info/app/docker-compose.yml
     - ssh root@89.221.219.22 "docker-compose -f /data/travel-info/app/docker-compose.yml pull"
     - ssh root@89.221.219.22 "docker-compose -f /data/travel-info/app/docker-compose.yml up -d"
