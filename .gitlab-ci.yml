@@ -42,9 +42,9 @@ deploy:
   stage: deploy
   script:
     - scp ./docker-compose-prod.yml root@89.221.219.22:/data/travel-info/app/docker-compose.yml
-    - ssh root@89.221.219.22 docker-compose pull -f /data/travel-info/app/docker-compose.yml 
-    - ssh root@89.221.219.22 docker-compose up -d -f /data/travel-info/app/docker-compose.yml 
-    - ssh root@89.221.219.22 docker image prune -af
+    - ssh root@89.221.219.22 "docker-compose pull -f /data/travel-info/app/docker-compose.yml"
+    - ssh root@89.221.219.22 "docker-compose up -d -f /data/travel-info/app/docker-compose.yml"
+    - ssh root@89.221.219.22 "docker image prune -af"
 
 
 
