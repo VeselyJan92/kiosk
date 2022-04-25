@@ -23,6 +23,7 @@ import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
 import com.expediagroup.graphql.generator.scalars.IDValueUnboxer
 import com.expediagroup.graphql.generator.toSchema
 import cz.cvut.veselj57.dt.graphql.directives.AuthHotelDirectiveWiring
+import cz.cvut.veselj57.dt.graphql.model.KoinEntity
 import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTrip
 import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
 import cz.cvut.veselj57.dt.graphql.mutations.TravelInfoMutation
@@ -35,6 +36,7 @@ import graphql.execution.DataFetcherExceptionHandlerParameters
 import graphql.execution.DataFetcherExceptionHandlerResult
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import kotlin.reflect.KClass
 
 private class CustomDataFetcherExceptionHandler : DataFetcherExceptionHandler {
     override fun onException(handlerParameters: DataFetcherExceptionHandlerParameters): DataFetcherExceptionHandlerResult {
@@ -66,6 +68,13 @@ object GraphQLSchema: KoinComponent {
                     put("AuthorizeHotel",  AuthHotelDirectiveWiring())
                 }
             )
+
+            override fun isValidSuperclass(kClass: KClass<*>): Boolean {
+                return if (kClass == KoinComponent::class || kClass == KoinEntity::class)
+                    false
+                else
+                    super.isValidSuperclass(kClass)
+            }
         },
     )
 
@@ -75,7 +84,7 @@ object GraphQLSchema: KoinComponent {
     )
     private val mutations = listOf(
         TopLevelObject(TripMutation(get())),
-        TopLevelObject(HotelMutation(get(), get(), get())),
+        TopLevelObject(HotelMutation(get(), get(), get(), get ())),
         TopLevelObject(TravelInfoMutation(get()))
     )
 

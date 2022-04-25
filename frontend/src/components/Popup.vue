@@ -2,18 +2,21 @@
 
   <div class="popup-container" >
 
-    <div class="popup-content">
+    <div class="scroll-padding">
+      <div class="popup-content">
+        <div class="title">
+          <h3>{{props.title}}</h3>
+          <div @click.stop="close" class="close"> <span class="material-icons " >close</span>Zpět</div>
 
-      <div class="title">
-        <h3>{{props.title}}</h3>
-        <div @click.stop="close" class="close"> <span class="material-icons " >close</span>Zpět</div>
+        </div>
 
+        <slot></slot>
       </div>
-
-      <slot></slot>
 
 
     </div>
+
+
 
   </div>
 
@@ -97,15 +100,29 @@ onUnmounted(()=>{
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-
-
-.popup-content{
-  width: calc(min(600px, 100%) - 20px);
-  max-height: calc(100% - 50px);
+.scroll-padding{
+  width: calc(min(800px, 100%) - 20px);
   background-color: #F4F5F6;
   border-radius: 20px;
-  padding: 25px;
+  padding: 10px;
+  margin: 10px;
+
+}
+
+.popup-content{
+  padding: 15px;
   overflow-y: auto;
+  max-height: calc(100vh - 100px);
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #c2c9d2;
+  }
+
 }
 
 .title{

@@ -34,11 +34,35 @@
         </div>
       </div>
 
+
+      <div class="row mb-3">
+        <div class="col">
+          <label>Nahrát Logo</label>
+          <div class="input-group ">
+            <input type="file" class="form-control" ref="logoPic">
+          </div>
+        </div>
+
+        <div class="col">
+          <label>Nahrát úvodní foto</label>
+          <div class="input-group ">
+            <input type="file" class="form-control" ref="introPic">
+          </div>
+        </div>
+      </div>
+
+
       <div class="popup-footer">
         <button type="submit" @submit="submit" class="btn btn-primary">Uložit</button>
       </div>
 
+
     </form>
+
+
+
+
+
 
 
   </Popup>
@@ -54,14 +78,23 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 import Popup from "@/components/Popup.vue";
 import {useHotelStore} from "@/stores/hotel";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {getGraphQLClient} from "@/composables/GraphQL";
 import {gql} from "graphql-request";
 import {useRouter} from "vue-router";
+import {encode} from "base64-arraybuffer";
+
+import { readAsArrayBuffer} from 'promise-file-reader';
+import readFileAsBlob from "@/composables/File";
+
 
 const hotel = useHotelStore()
-
 const router = useRouter()
+
+
+
+const logoPic = ref(null)
+const introPic = ref(null)
 
 const {accommodation_text, contact_email, contact_phone, hotel_name, official_website} = hotel.data
 
@@ -70,7 +103,8 @@ const data = reactive({contact_email, contact_phone, hotel_name, official_websit
 async function submit(e: Event) {
   e.preventDefault()
 
-
+  const intro_img =  introPic.value.files[0] ? encode(await readFileAsBlob( introPic.value.files[0])) : null
+  const logo_img =  logoPic.value.files[0] ? encode(await readFileAsBlob( logoPic.value.files[0])) : null
 
   const query = gql`
     mutation ($data: HotelUpdateInput!) {
@@ -79,7 +113,7 @@ async function submit(e: Event) {
       }
     }
   `
-  await getGraphQLClient().request(query, {data: { _id: hotel.hotel_id, ...data}})
+  await getGraphQLClient().request(query, {data: { _id: hotel.hotel_id, ...data, intro_img, logo_img}})
 
   await hotel.reload()
 

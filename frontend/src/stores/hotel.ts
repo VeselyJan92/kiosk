@@ -7,7 +7,9 @@ import type {HotelDTO, TravelInfoDTO} from "graphql-types";
 export type RootType = {
   data: HotelDTO | null
   hotel_id: string | null
-  state: {selectedCategory: number}
+  state: {
+    selectedCategory: number
+  }
 }
 
 export const useHotelStore  = defineStore("kiosk_store", {
@@ -52,11 +54,19 @@ export const useHotelStore  = defineStore("kiosk_store", {
       return this.data.trip_categories[this.state.selectedCategory]?.trips ?? []
     },
 
+
+    getMobileCategories() {
+      return this.data.trip_categories.length >= 4 ? this.data.trip_categories.slice(0, 3) : [];
+    },
+
+
     async reload(){
       const request = gql`query($id: String!) {
        searchHotels(id: $id) {
         contact_email
         contact_phone
+        intro_img_url
+        logo_img_url
         accommodation_text
         official_website
         hotel_name
@@ -69,7 +79,7 @@ export const useHotelStore  = defineStore("kiosk_store", {
         trip_categories {
           _id name trip_ids 
           trips {
-           _id hotel_id title tags text main_img_url imgs img_urls
+           _id hotel_id title tags text imgs img_urls
           }
         } 
        }

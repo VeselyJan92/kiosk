@@ -19,7 +19,6 @@ class HotelDAO() : KoinComponent {
     val db by inject<MongoDB>()
 
     suspend fun getHotel(id: String): HotelEntity? {
-
         return db.hotels.findOne(HotelEntity::_id eq id)
     }
 

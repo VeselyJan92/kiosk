@@ -36,7 +36,7 @@ class TripQuery(
     private val tripDAO: TripDAO
 ) : Query {
 
-    @GraphQLDescription("Return list of books based on BookSearchParameter options")
+    @GraphQLDescription("Return a Trips by id list")
     @Suppress("unused")
     fun searchTrips(dfe: DataFetchingEnvironment, ids: List<String>? = null): List<TripQL>  = runBlocking {
         tripDAO.get(ids).map { it.toGQL(dfe)}

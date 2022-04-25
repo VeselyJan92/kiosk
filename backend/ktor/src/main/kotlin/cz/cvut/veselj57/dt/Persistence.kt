@@ -12,18 +12,3 @@ interface Config{
 
     fun getMongoDatabase() = KMongo.createClient(getURL(IP, PORT)).getDatabase(DATABASE_NAME)
 }
-
-
-object MongoConfig : Config {
-    override val DATABASE_NAME = "bt"
-    override val PORT = 27017
-    override val IP = "localhost"
-}
-
-
-
-
-class Persistence {
-}
-
-

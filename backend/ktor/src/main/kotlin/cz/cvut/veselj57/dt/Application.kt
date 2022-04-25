@@ -38,7 +38,7 @@ fun Application.main() {
         db.images.drop()
         db.posts.drop()
 
-        Seeder().seedHotel()
+        SeederReal().seedHotel()
     }
 
 

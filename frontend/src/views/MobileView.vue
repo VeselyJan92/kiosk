@@ -10,7 +10,7 @@
 
       <div class="accommodation-content">
         <TextInfoBox class="accommodation-text" :text="kiosk.data.accommodation_text"></TextInfoBox>
-        <img src="/static/hotel.jpg">
+        <img :src="kiosk.data.intro_img_url">
       </div>
 
 
@@ -23,52 +23,30 @@
         </div>
 
         <div class="mobile-trips" style="margin-top: 20px">
+          <div v-for="category in kiosk.getMobileCategories()">
+            <h2>{{category.name}}</h2>
 
-          <h2>Nejhledanější</h2>
-
-          <div class="trips scrollbar-hidden">
-            <TripBanner v-for="(item) in kiosk.getSelectedCategoryTrips()" :data="item"></TripBanner>
+            <div class="trips scrollbar-hidden">
+              <TripBanner v-for="(item) in category.trips" :data="item"></TripBanner>
+            </div>
           </div>
-
-          <h2>Nejhledanější</h2>
-
-
-          <div class="trips scrollbar-hidden">
-            <TripBanner v-for="(item) in kiosk.getSelectedCategoryTrips()" :data="item"></TripBanner>
-          </div>
-
-          <h2>Nejhledanější</h2>
-
-          <div class="trips scrollbar-hidden">
-            <TripBanner v-for="(item) in kiosk.getSelectedCategoryTrips()" :data="item"></TripBanner>
-          </div>
-
-          <div class="categories">
-            <CategoryButton
-                v-for="(item, index) in kiosk.data.trip_categories"
-                :category="item"
-            ></CategoryButton>
-          </div>
-
-
         </div>
 
         <div class="desktop-trips">
           <h2 class="title-categories">Vyberte si podle</h2>
+        </div>
 
+        <div class="categories">
+          <CategoryButton
+              v-for="(item, index) in kiosk.data.trip_categories"
+              :category="item"
+              :selected="index === kiosk.state.selectedCategory"
+              @click="kiosk.selectCategory(index)"
+          ></CategoryButton>
+        </div>
 
-          <div class="categories">
-            <CategoryButton
-                v-for="(item, index) in kiosk.data.trip_categories"
-                :category="item"
-                :selected="index === kiosk.state.selectedCategory"
-                @click="kiosk.selectCategory(index)"
-            ></CategoryButton>
-          </div>
-
-          <div class="trips scrollbar-hidden">
-            <TripBanner v-for="(item) in kiosk.getSelectedCategoryTrips()" :data="item"></TripBanner>
-          </div>
+        <div class="trips scrollbar-hidden dynamic-trips" ref="dynamicTrips" >
+          <TripBanner v-for="(item) in kiosk.getSelectedCategoryTrips()" :data="item"></TripBanner>
         </div>
 
 
@@ -91,7 +69,7 @@ import CategoryButton from "../components/travel/CategoryButton.vue";
 import TripBanner from "../components/Mobile/MobileTripBanner.vue";
 import Title from "../components/Title.vue";
 import {useHotelStore} from "@/stores/hotel";
-import {onBeforeMount} from "vue";
+import {onMounted, ref, watch} from "vue";
 import AdminSettingsPanel from "@/components/admin/AdminSettingsPanel.vue";
 import {useRoute} from "vue-router";
 import {useUserStore} from "@/stores/user";
@@ -103,7 +81,15 @@ const kiosk = useHotelStore()
 const user = useUserStore()
 const route = useRoute()
 
-console.log("MobileView")
+
+const dynamicTrips = ref(null)
+
+
+watch(kiosk.$state.state, () => {
+  dynamicTrips.value.scrollLeft = 0
+})
+
+
 
 </script>
 
@@ -148,7 +134,7 @@ console.log("MobileView")
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 
-    @include md{
+    @include lg{
       display: block;
     }
 
@@ -288,6 +274,10 @@ console.log("MobileView")
 .scrollbar-hidden {
   -ms-overflow-style: none;
   scrollbar-width: none; /* Firefox */
+}
+
+.dynamic-trips{
+  scroll-behavior: smooth;
 }
 
 

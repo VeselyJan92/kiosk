@@ -5,6 +5,7 @@ import cz.cvut.veselj57.dt.entities.TripEntity
 import cz.cvut.veselj57.dt.repository.TripDAO
 import cz.cvut.veselj57.dt.services.ServerConfig
 import graphql.schema.DataFetchingEnvironment
+import org.koin.core.component.get
 import org.koin.java.KoinJavaComponent.getKoin
 
 
@@ -16,23 +17,11 @@ data class TripQL(
     var hotel_id: String?,
     var title: String?,
     var text: String?,
-    var imgs: List<String>?,
-    var tags: List<String>?,
-    var img_urls: List<String>? = null,
-) {
+    var imgs: List<String>,
+    var tags: List<String>
+):KoinEntity {
 
-    fun main_img_url(): String {
-        val baseURL = getKoin().get<ServerConfig>().baseUrl
-
-        return baseURL + "/img/${imgs?.first()}"
-    }
-
-    fun img_urls(): List<String> {
-        val baseURL = getKoin().get<ServerConfig>().baseUrl
-
-        return imgs?.map { "$baseURL/img/$it" } ?: listOf()
-    }
-
+    fun img_urls() = imgs.map { "${get<ServerConfig>().baseUrl}/img/${it}"}
 
     suspend fun categories(dfe: DataFetchingEnvironment): List<TripCategoryQL> {
         return getKoin().get<TripDAO>().getCategories(_id).map { it.toGQL(dfe) }

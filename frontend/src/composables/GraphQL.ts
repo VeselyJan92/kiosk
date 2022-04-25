@@ -1,11 +1,5 @@
 import {GraphQLClient} from "graphql-request";
-import {useHotelStore} from "@/stores/hotel";
 import {useUserStore} from "@/stores/user";
-
-
-
-
-
 
 
 export const graphQLClient = new GraphQLClient(import.meta.env.VITE_SERVER_URL + "/graphql", {
@@ -24,9 +18,6 @@ export function getGraphQLClient(){
     }
 
     const token = store.token
-
-
-    console.log(token)
 
     if (token)
         headers["Authorization"] = "Bearer " + token

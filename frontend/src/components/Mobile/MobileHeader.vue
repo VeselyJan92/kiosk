@@ -3,10 +3,10 @@
     <div>
 
       <div class="logo">
-        <img src="/static/logo_tmp.png">
+        <img :src="hotel.data.logo_img_url">
 
         <div>
-          <span>Penzion U Veselých</span>
+          <span>{{ hotel.data.hotel_name }}</span>
           <span>Informace pro Hosty</span>
         </div>
       </div>
@@ -24,11 +24,11 @@
 
       <div class="contact">
         <div>
-          <GrayButton icon="call" text="+420 774 406 784"></GrayButton>
+          <GrayButton icon="call" :text="hotel.data.contact_phone"></GrayButton>
         </div>
 
         <div>
-          <GrayButton icon="email" text="veselypenzion@email.cz"></GrayButton>
+          <GrayButton icon="email" :text="hotel.data.contact_email"></GrayButton>
         </div>
       </div>
 
@@ -42,6 +42,10 @@
 
 <script setup>
 import GrayButton from "../GrayButton.vue";
+import {useHotelStore} from "@/stores/hotel";
+
+
+const hotel = useHotelStore()
 
 
 </script>
@@ -50,7 +54,8 @@ import GrayButton from "../GrayButton.vue";
 
 nav{
   width: 100%;
-  background-color: #e2e2e2;
+  //background-color: #e2e2e2;
+  background-color: white;
 
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 

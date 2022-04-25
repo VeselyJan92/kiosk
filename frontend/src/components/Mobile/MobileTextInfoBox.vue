@@ -28,6 +28,9 @@ defineProps({text: String})
 
   @include md{
     background-color: whitesmoke;
+
+    //background-color: white;
+
     border: 1px solid #EAEAEA;
     padding: 10px
   }
@@ -42,8 +45,8 @@ defineProps({text: String})
 }
 
 p{
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 15px;
+  line-height: 16px;
   margin-bottom: 0;
 
 }

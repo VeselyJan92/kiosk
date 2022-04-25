@@ -14,12 +14,10 @@ import {useHotelStore} from "@/stores/hotel";
 
 async function checkData(to){
   const hotel = useHotelStore()
-
   if (!hotel.data){
     hotel.setHotelId(to.params.id)
     await hotel.reload()
   }
-
 }
 
 

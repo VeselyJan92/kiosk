@@ -28,11 +28,13 @@ class HotelActions(client: HttpClient): GraphQLClient(client) {
         }
     }
 
-    suspend fun upsertTrip(trip: UpsertTrip): TripDTO = graphQLRequestTyped(
-        query = "mutation (\$input: UpsertTripInput!) { upsertTrip(input: \$input){ _id hotel_id title text imgs tags } }",
-        topLevelName = "upsertTrip",
-    ){
-        put("input", Json.encodeToJsonElement(trip))
+    suspend fun upsertTrip(trip: UpsertTrip): TripDTO {
+        return graphQLRequestTyped(
+            query = "mutation (\$input: UpsertTripInput!) { upsertTrip(input: \$input){ _id hotel_id title text imgs tags } }",
+            topLevelName = "upsertTrip",
+        ){
+            put("input", Json.encodeToJsonElement(trip))
+        }
     }
 
     suspend fun modifyCategories(list: List<TripCategoryDTO> ): List<TripCategoryDTO> {

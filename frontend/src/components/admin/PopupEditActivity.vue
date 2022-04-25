@@ -43,7 +43,7 @@
       </div>
 
       <div class="mb-3">
-        <label>Upload</label>
+        <label>Nahrát fotky</label>
         <div class="input-group ">
           <input type="file" class="form-control" id="popup-edit-trip-imgs" @change="upload">
         </div>

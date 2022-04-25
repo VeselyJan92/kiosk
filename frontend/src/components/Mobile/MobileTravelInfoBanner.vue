@@ -1,7 +1,7 @@
 <template>
-<div class="travel-info-banner" @click.stop="edit">
+<div class="travel-info-banner" @click.stop="display">
 
-  <h4>{{ data.title }}</h4>
+  <h4><span v-if="user.edit_mode" class="material-icons edit" @click.stop="edit">edit</span> {{ data.title }} </h4>
 
   <p>{{data.text.toString().replace(/(<([^>]+)>)/gi, "").slice(0, 150)}}</p>
 
@@ -11,18 +11,29 @@
 <script setup>
 import router from "@/router";
 import {useHotelStore} from "@/stores/hotel";
+import {useUserStore} from "@/stores/user";
 
 const props = defineProps({data: Object})
 const hotel = useHotelStore()
 
-function edit(){
+const user = useUserStore()
+
+function display(){
   //router.push({name: 'edit-travel-info', params:{id:hotel.hotel_id, infoId: props.data._id}})
   router.push({name: 'travel-info', params:{id:hotel.hotel_id, infoId: props.data._id}})
+}
+
+function edit(){
+  router.push({name: 'edit-travel-info', params:{id:hotel.hotel_id, infoId: props.data._id}})
 }
 
 </script>
 
 <style scoped lang="scss">
+
+.edit{
+  float: right
+}
 
 .travel-info-banner {
   background: #ebebeb;

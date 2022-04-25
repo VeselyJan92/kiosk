@@ -36,7 +36,7 @@ class HotelQuery(
     private val  hotelDAO: HotelDAO
 ) : Query {
 
-    @GraphQLDescription("Return list of books based on BookSearchParameter options")
+    @GraphQLDescription("Return a Hotel by id")
     @Suppress("unused")
     suspend fun searchHotels(dfe: DataFetchingEnvironment, id: String): HotelQL? {
         return hotelDAO.getHotel(id)?.toGraphQL(dfe)

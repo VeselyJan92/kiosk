@@ -3,7 +3,6 @@ package cz.cvut.veselj57.dt.repository
 import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.entities.TripEntity
 import cz.cvut.veselj57.dt.entities.TripCategoryEntity
-import cz.cvut.veselj57.dt.id
 import cz.cvut.veselj57.dt.persistence.MongoDB
 import org.bson.types.ObjectId
 import org.koin.core.component.KoinComponent
@@ -115,7 +114,7 @@ class TripDAO(): KoinComponent {
 
         if (hotel != null){
             hotel.trip_categories.forEach {
-                it.trips_ids = it.trips_ids.toMutableList().apply { remove(trip._id) }
+                it.trips_ids = it.trips_ids.filter { it != trip._id }
             }
 
             db.hotels.updateOne(hotel)

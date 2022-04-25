@@ -15,23 +15,13 @@
  */
 
 
-import com.auth0.jwt.JWT
 import com.expediagroup.graphql.generator.execution.GraphQLContext
 import com.expediagroup.graphql.server.execution.GraphQLContextFactory
-import cz.cvut.veselj57.dt.Role
 import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.graphql.security.GQLRole
-import cz.cvut.veselj57.dt.id
-import cz.cvut.veselj57.dt.persistence.MongoDB
-import cz.cvut.veselj57.dt.repository.HotelDAO
-import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.component.inject
-import org.koin.core.context.KoinContext
-import org.litote.kmongo.eq
 
 /**
  * Custom logic for how this example app should create its context given the [ApplicationRequest]

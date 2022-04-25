@@ -1,3 +1,4 @@
+/*
 package cz.cvut.veselj57.dt
 
 import at.favre.lib.crypto.bcrypt.BCrypt
@@ -165,4 +166,4 @@ class Seeder(): KoinComponent {
     }
 
 
-}
+}*/

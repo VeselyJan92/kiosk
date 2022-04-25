@@ -2,7 +2,7 @@
 
   <div class="trip-banner"  @click.stop="show">
 
-    <img :src="data.main_img_url">
+    <img :src="data.img_urls[0]">
 
     <div>
 

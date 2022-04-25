@@ -7,6 +7,7 @@ import cz.cvut.veselj57.dt.entities.TripCategoryEntity
 import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
 import cz.cvut.veselj57.dt.persistence.MongoDB
 import cz.cvut.veselj57.dt.repository.HotelDAO
+import cz.cvut.veselj57.dt.repository.ImageDAO
 import cz.cvut.veselj57.dt.repository.TripDAO
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -19,6 +20,8 @@ class NewHotelService: KoinComponent {
     val hotelDAO by inject<HotelDAO>()
 
     val tripDAO by inject<TripDAO>()
+
+    val imgDAO by inject<ImageDAO>()
 
     val db by inject<MongoDB>()
 
@@ -53,12 +56,16 @@ class NewHotelService: KoinComponent {
             }
         }
 
+        val blankImg = imgDAO.putImage(javaClass.classLoader.getResource("/seed/placeholder-image.png")!!.openStream().readAllBytes())
+
         val hotel = HotelEntity(
             _id = id,
             hashed_password = auth.hashPassword(data.password),
             email = data.email,
             hotel_name = "TODOzzz",
             accommodation_text = lorem.getHtmlParagraphs(1, 3),
+            logo_img_id = blankImg,
+            intro_img_id = blankImg,
             contact_email = data.contact_email,
             contact_phone = data.contact_phone,
             official_website = data.official_website,

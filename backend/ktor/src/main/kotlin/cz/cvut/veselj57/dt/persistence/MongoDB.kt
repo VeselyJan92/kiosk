@@ -4,6 +4,7 @@ import com.mongodb.reactivestreams.client.gridfs.GridFSBucket
 import com.mongodb.reactivestreams.client.gridfs.GridFSBuckets
 import cz.cvut.veselj57.dt.entities.TravelInfoEntity
 import cz.cvut.veselj57.dt.entities.HotelEntity
+import cz.cvut.veselj57.dt.entities.ImageEntity
 import cz.cvut.veselj57.dt.entities.TripEntity
 import io.ktor.server.application.*
 import org.litote.kmongo.coroutine.CoroutineCollection
@@ -17,6 +18,7 @@ interface MongoDB {
     val hotels: CoroutineCollection<HotelEntity>
     val trips: CoroutineCollection<TripEntity>
     val posts: CoroutineCollection<TravelInfoEntity>
+    val imgs: CoroutineCollection<ImageEntity>
     val images: GridFSBucket
 }
 
@@ -45,8 +47,9 @@ class MongoDBImpl(
 
     override val posts = database.getCollection<TravelInfoEntity>()
 
-    override val images: GridFSBucket = GridFSBuckets.create(database.database, "TripImages")
+    override val imgs = database.getCollection<ImageEntity>()
 
+    override val images: GridFSBucket = GridFSBuckets.create(database.database, "TripImages")
 
     private fun getURL(ip: String, port: Int) = "mongodb://$ip:$port"
 
