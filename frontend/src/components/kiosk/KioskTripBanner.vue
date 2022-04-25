@@ -5,7 +5,7 @@
   <div class="trip-banner"  @click="show = true">
 
     <div class="image">
-      <img :src="data.main_img_url">
+<!--      <img :src="data.main_img_url">-->
 
       <div class="tags">
         <Tag v-for="item in data.tags" :data="{name: item, color: '#eef3e7'}"></Tag>

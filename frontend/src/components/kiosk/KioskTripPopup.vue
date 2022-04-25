@@ -13,7 +13,7 @@
       </div>
 
 
-      <img :src="data.main_img_url" class="intro-img">
+<!--      <img :src="data.main_img_url" class="intro-img">-->
 
       <div class="content-text description auto-text" v-html="data.text"></div>
 
