@@ -8,17 +8,6 @@ import kotlinx.serialization.json.*
 
 
 
-
-
-
-suspend  fun ApplicationTestBuilder.clear_database(){
-    application {
-        runBlocking { DatabaseDebugUtils.clear() }
-    }
-}
-
-
-
 fun testApplicationClearDB(test: suspend ApplicationTestBuilder.()->Unit){
     testApplication {
         application { runBlocking { DatabaseDebugUtils.clear() } }

@@ -29,9 +29,9 @@ data class HotelQL(
         return get<TravelInfoTextDAO>().getHotelTravelInfos(_id).map { it.toGQL(dfe) }
     }
 
-    suspend fun logo_img_url() = "${get<ServerConfig>().baseUrl}/img/$logo_img_id"
+    suspend fun logo_img_url(dfe: DataFetchingEnvironment) = "${get<ServerConfig>().baseUrl}/img/$logo_img_id"
 
-    suspend fun intro_img_url() = "${get<ServerConfig>().baseUrl}/img/$intro_img_id"
+    suspend fun intro_img_url(dfe: DataFetchingEnvironment) = "${get<ServerConfig>().baseUrl}/img/$intro_img_id"
 }
 
 

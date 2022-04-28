@@ -84,6 +84,11 @@ dependencies {
 
 
 
+    testImplementation("org.testcontainers:mongodb:1.16.3")
+
+
+
+
     implementation("com.thedeanda:lorem:2.1")
 }
 

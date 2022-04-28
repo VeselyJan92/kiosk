@@ -1,16 +1,16 @@
 package cz.cvut.veselj57.dt.graphql.mutations
 
-import KtorGraphQLContextFactory
+import cz.cvut.veselj57.dt.graphql.KtorGraphQLContextFactory
 import cz.cvut.veselj57.dt.entities.TravelInfoEntity
 import cz.cvut.veselj57.dt.graphql.directives.AuthHotelDirective
 import cz.cvut.veselj57.dt.graphql.exceptions.EntityNotFound
 import cz.cvut.veselj57.dt.graphql.exceptions.UnauthorizedGraphQLRequest
 import cz.cvut.veselj57.dt.graphql.model.TripInfoQL
+import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTravelInfo
 import cz.cvut.veselj57.dt.graphql.model.toGQL
 import cz.cvut.veselj57.dt.graphql.security.GQLRole
 import cz.cvut.veselj57.dt.repository.TravelInfoTextDAO
 import graphql.schema.DataFetchingEnvironment
-import kotlinx.serialization.Serializable
 import org.litote.kmongo.newId
 
 
@@ -18,19 +18,10 @@ class TravelInfoMutation(
     private val travelInfoTextDAO: TravelInfoTextDAO
 ) {
 
-    @Serializable
-    data class UpsertTravelInfo(
-        var _id: String?,
-        var title: String,
-        val text: String,
-    )
-
-
     @AuthHotelDirective
     suspend fun upsertTravelInfo(
         dfe: DataFetchingEnvironment,
         input: UpsertTravelInfo
-
     ): TripInfoQL {
         val hotel = dfe.graphQlContext.get<GQLRole.Hotel>(KtorGraphQLContextFactory.ROLE_KEY).entity
 

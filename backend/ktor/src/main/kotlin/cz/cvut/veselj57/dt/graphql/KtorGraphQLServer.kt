@@ -15,13 +15,13 @@
  */
 
 
-import KtorGraphQLContextFactory
-import KtorGraphQLRequestParser
+import cz.cvut.veselj57.dt.graphql.KtorGraphQLContextFactory
 import com.expediagroup.graphql.server.execution.GraphQLRequestHandler
 import com.expediagroup.graphql.server.execution.GraphQLServer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import cz.cvut.veselj57.dt.graphql.GraphQLSchema
+import cz.cvut.veselj57.dt.graphql.KtorGraphQLRequestParser
 import io.ktor.server.request.ApplicationRequest
 import org.koin.core.component.KoinComponent
 import org.litote.kmongo.id.jackson.IdJacksonModule

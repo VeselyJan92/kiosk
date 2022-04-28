@@ -1,4 +1,6 @@
-import cz.cvut.veselj57.dt.graphql.model.mutations.TravelInfoMutation
+import cz.cvut.veselj57.dt.graphql.model.mutations.HotelMutation
+import cz.cvut.veselj57.dt.graphql.model.mutations.TravelInfoDTO
+import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTravelInfo
 import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTrip
 import cz.cvut.veselj57.dt.graphql.model.query.HotelDTO
 import cz.cvut.veselj57.dt.graphql.model.query.TripCategoryDTO
@@ -10,7 +12,7 @@ import kotlinx.serialization.json.put
 
 class HotelActions(client: HttpClient): GraphQLClient(client) {
 
-    suspend fun registerHotel(data: TravelInfoMutation.RegisterHotel): HotelDTO {
+    suspend fun registerHotel(data: HotelMutation.RegisterHotel): HotelDTO {
         return graphQLRequestTyped(
             "mutation(\$data: RegisterHotelInput!) { registerHotel(data: \$data) { _id email accommodation_text hotel_name contact_phone contact_email official_website }}",
             "registerHotel"
@@ -50,9 +52,24 @@ class HotelActions(client: HttpClient): GraphQLClient(client) {
         val query = """
             query(${'$'}hotel_id: String!) {
                 searchHotels(id: ${'$'}hotel_id) {_id contact_email accommodation_text hotel_name contact_phone email official_website
-                    trip_categories {  _id name trip_ids
-                        trips { _id hotel_id imgs tags text title img_urls
-                        
+                    travel_info{
+                        _id
+                        hotel_id
+                        title
+                        text
+                    }
+                    trip_categories {  
+                        _id 
+                        name
+                        trip_ids
+                        trips { 
+                            _id
+                            hotel_id
+                            imgs
+                            tags
+                            text
+                            title
+                            img_urls
                         }
                     }
                 }
@@ -67,7 +84,24 @@ class HotelActions(client: HttpClient): GraphQLClient(client) {
         }
     }
 
+    suspend fun upsertTravelInfo(info: UpsertTravelInfo): TravelInfoDTO {
+        return graphQLRequestTyped(
+            query = "mutation (\$input: UpsertTravelInfoInput!) { upsertTravelInfo(input: \$input){ _id hotel_id title text } }",
+            topLevelName = "upsertTravelInfo",
+        ){
+            put("input", Json.encodeToJsonElement(info))
+        }
+    }
 
-
+    suspend fun deleteTravelInfo(id: String): TravelInfoDTO {
+        return graphQLRequestTyped(
+            query = "mutation (\$id: String!) { deleteTravelInfo(id: \$id){ _id hotel_id title text } }",
+            topLevelName = "deleteTravelInfo",
+        ){
+            put("id", id)
+        }
+    }
 
 }
+
+

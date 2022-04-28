@@ -1,26 +1,29 @@
 package cz.cvut.veselj57.dt.utils
 
-import cz.cvut.veselj57.dt.graphql.model.mutations.TravelInfoMutation
+import com.thedeanda.lorem.LoremIpsum
+import cz.cvut.veselj57.dt.graphql.model.mutations.HotelMutation
+import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTravelInfo
 import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTrip
-import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
-import cz.cvut.veselj57.dt.graphql.mutations.TripMutation
 import io.ktor.util.*
 
 object TestSeeder {
 
+    val lorem = LoremIpsum.getInstance()
+
     fun getHotelRegistration(
         email: String,
         password: String ,
-        accommodation_text: String = "",
-        contact_phone: String = "",
-        contact_email: String = "",
-        official_website: String = "",
-    ) = TravelInfoMutation.RegisterHotel(email,
+        accommodation_text: String = lorem.getHtmlParagraphs(1, 2),
+        contact_phone: String = lorem.phone,
+        contact_email: String = lorem.email,
+        official_website: String = lorem.url,
+    ) = HotelMutation.RegisterHotel(email,
         password,
         accommodation_text,
         contact_phone,
         contact_email,
-        official_website)
+        official_website
+    )
 
 
     fun getUpsertTripData(
@@ -40,6 +43,12 @@ object TestSeeder {
         )
 
     }
+
+    fun getUpsertTravelInfo(
+        _id: String? = null,
+        title: String = lorem.getTitle(2, 6),
+        text: String = lorem.getHtmlParagraphs(1, 2)
+    ) = UpsertTravelInfo(_id, title, text)
 
 
 }

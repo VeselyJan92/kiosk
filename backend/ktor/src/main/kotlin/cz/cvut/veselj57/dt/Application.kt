@@ -35,7 +35,7 @@ fun Application.main() {
 
         db.hotels.deleteMany()
         db.trips.deleteMany()
-        db.images.drop()
+        db.imgs.drop()
         db.posts.drop()
 
         SeederReal().seedHotel()

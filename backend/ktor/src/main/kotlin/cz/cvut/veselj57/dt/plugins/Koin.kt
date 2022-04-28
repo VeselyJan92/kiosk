@@ -57,6 +57,8 @@ fun Application.configureKoin(){
             single { MongoDBImpl.getFromApplicationConfig(this@configureKoin)  }
         }
 
+
+
         val core = module {
             single<ImageDAO> { ImageDAO() }
             single<TripDAO> { TripDAO() }

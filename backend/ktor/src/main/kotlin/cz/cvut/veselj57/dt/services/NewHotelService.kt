@@ -56,7 +56,7 @@ class NewHotelService: KoinComponent {
             }
         }
 
-        val blankImg = imgDAO.putImage(javaClass.classLoader.getResource("/seed/placeholder-image.png")!!.openStream().readAllBytes())
+        val blankImg = imgDAO.putImage(javaClass.classLoader.getResource("seed/placeholder-image.png")!!.openStream().readAllBytes())
 
         val hotel = HotelEntity(
             _id = id,

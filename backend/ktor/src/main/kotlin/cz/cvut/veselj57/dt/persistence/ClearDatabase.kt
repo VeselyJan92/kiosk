@@ -10,7 +10,7 @@ object DatabaseDebugUtils: KoinComponent {
     suspend fun clear(){
         db.hotels.deleteMany()
         db.trips.deleteMany()
-        db.images.drop()
+        db.imgs.drop()
         db.posts.drop()
     }
 

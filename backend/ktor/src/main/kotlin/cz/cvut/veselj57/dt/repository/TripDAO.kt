@@ -123,10 +123,5 @@ class TripDAO(): KoinComponent {
         db.trips.deleteOneById(ObjectId(trip._id))
     }
 
-
-
-
-
-
-
 }
+

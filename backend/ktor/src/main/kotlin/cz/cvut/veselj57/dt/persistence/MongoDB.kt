@@ -19,7 +19,6 @@ interface MongoDB {
     val trips: CoroutineCollection<TripEntity>
     val posts: CoroutineCollection<TravelInfoEntity>
     val imgs: CoroutineCollection<ImageEntity>
-    val images: GridFSBucket
 }
 
 class MongoDBImpl(
@@ -49,10 +48,9 @@ class MongoDBImpl(
 
     override val imgs = database.getCollection<ImageEntity>()
 
-    override val images: GridFSBucket = GridFSBuckets.create(database.database, "TripImages")
-
     private fun getURL(ip: String, port: Int) = "mongodb://$ip:$port"
 
-    private fun getMongoDatabase() = KMongo.createClient(getURL(IP, PORT)).getDatabase(DATABASE_NAME)
+   // private fun getMongoDatabase() = KMongo.createClient(getURL(IP, PORT)).getDatabase(DATABASE_NAME)
+    private fun getMongoDatabase() = KMongo.createClient("mongodb://mongodb:27017").getDatabase(DATABASE_NAME)
 
 }

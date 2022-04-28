@@ -21,7 +21,7 @@ data class TripQL(
     var tags: List<String>
 ):KoinEntity {
 
-    fun img_urls() = imgs.map { "${get<ServerConfig>().baseUrl}/img/${it}"}
+    suspend fun img_urls(dfe: DataFetchingEnvironment) = imgs.map { "${get<ServerConfig>().baseUrl}/img/${it}"}
 
     suspend fun categories(dfe: DataFetchingEnvironment): List<TripCategoryQL> {
         return getKoin().get<TripDAO>().getCategories(_id).map { it.toGQL(dfe) }

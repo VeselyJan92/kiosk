@@ -1,21 +1,15 @@
 package cz.cvut.veselj57.dt.graphql.mutations
 
-import KtorGraphQLContextFactory
-import com.expediagroup.graphql.server.operations.Mutation
-import cz.cvut.veselj57.dt.entities.HotelEntity
+import cz.cvut.veselj57.dt.graphql.KtorGraphQLContextFactory
 import cz.cvut.veselj57.dt.entities.TripEntity
 import cz.cvut.veselj57.dt.graphql.directives.AuthHotelDirective
 import cz.cvut.veselj57.dt.graphql.model.TripQL
 import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTrip
 import cz.cvut.veselj57.dt.graphql.model.toGQL
 import cz.cvut.veselj57.dt.graphql.security.GQLRole
-import cz.cvut.veselj57.dt.graphql.security.roleAllowed
-import cz.cvut.veselj57.dt.persistence.MongoDB
-import cz.cvut.veselj57.dt.repository.ImageDAO
 import cz.cvut.veselj57.dt.repository.TripDAO
 import graphql.GraphQLException
 import graphql.schema.DataFetchingEnvironment
-import org.koin.core.component.inject
 import java.util.Base64
 import org.litote.kmongo.newId
 
@@ -61,8 +55,10 @@ class TripMutation(
     }
 
     @AuthHotelDirective
-    suspend fun deleteTrip(dfe: DataFetchingEnvironment, id: String): TripQL = roleAllowed(dfe, GQLRole.Hotel::class){ role ->
-        val trip = tripDAO.getTrip(id, role._id) ?: throw Exception("Trip not find.")
+    suspend fun deleteTrip(dfe: DataFetchingEnvironment, id: String): TripQL {
+        val hotel = dfe.graphQlContext.get<GQLRole.Hotel>(KtorGraphQLContextFactory.ROLE_KEY).entity
+
+        val trip = tripDAO.getTrip(id, hotel._id) ?: throw Exception("Trip not find.")
 
         tripDAO.deleteTrip(trip)
 

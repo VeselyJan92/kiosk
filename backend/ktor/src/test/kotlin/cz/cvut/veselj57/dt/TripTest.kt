@@ -3,10 +3,9 @@ package cz.cvut.veselj57.dt
 
 import Credentials
 import HotelActions
-import cz.cvut.veselj57.dt.graphql.model.mutations.TravelInfoMutation
+import cz.cvut.veselj57.dt.graphql.model.mutations.HotelMutation
 import cz.cvut.veselj57.dt.graphql.model.query.TripCategoryDTO
 import cz.cvut.veselj57.dt.utils.TestSeeder
-import io.ktor.server.testing.*
 import io.ktor.util.*
 
 
@@ -16,12 +15,13 @@ import kotlin.test.*
 
 class TripTest {
 
+
     @Test
     fun `insert and modify trip`() = testApplicationClearDB {
 
         val hotelActions = HotelActions(client)
 
-        val h1 = TravelInfoMutation.RegisterHotel(
+        val h1 = HotelMutation.RegisterHotel(
             email = "hotel1@example.com", password = "secret", "", "", "", ""
         )
 
@@ -29,7 +29,7 @@ class TripTest {
             assertEquals(h1.email, this.email)
         }
 
-        val h2 = TravelInfoMutation.RegisterHotel(
+        val h2 = HotelMutation.RegisterHotel(
             email = "hotel2@example.com",
             password = "secret",
             "", "", "", ""

@@ -49,7 +49,7 @@ abstract class GraphQLClient(val client: HttpClient, private var token: String? 
             }
         }
 
-        val text = client.post("/graphql"){
+        val response = client.post("/graphql"){
             setBody(request.toString());
 
             token?.let {
@@ -57,8 +57,9 @@ abstract class GraphQLClient(val client: HttpClient, private var token: String? 
             }
         }
 
+        val text = response.bodyAsText()
 
-        return Json.parseToJsonElement(text.bodyAsText())
+        return Json.parseToJsonElement(text)
     }
 
     suspend inline fun <reified T> graphQLRequestTyped(

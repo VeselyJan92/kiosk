@@ -15,4 +15,4 @@ data class HotelDTO (
     val trip_categories: List<TripCategoryDTO>? = null,
     val travel_info: List<TravelInfoDTO>? = null,
 
-)
+    )

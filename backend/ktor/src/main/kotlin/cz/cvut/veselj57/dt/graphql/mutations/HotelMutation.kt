@@ -1,11 +1,8 @@
 package cz.cvut.veselj57.dt.graphql.mutations
 
-import KtorGraphQLContextFactory
+import cz.cvut.veselj57.dt.graphql.KtorGraphQLContextFactory
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.execution.GraphQLContextFactory
 import com.expediagroup.graphql.server.operations.Mutation
-import cz.cvut.veselj57.dt.Role
-import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.entities.TripCategoryEntity
 import cz.cvut.veselj57.dt.graphql.directives.AuthHotelDirective
 import cz.cvut.veselj57.dt.graphql.model.*
@@ -15,10 +12,7 @@ import cz.cvut.veselj57.dt.repository.HotelDAO
 import cz.cvut.veselj57.dt.repository.ImageDAO
 import cz.cvut.veselj57.dt.services.NewHotelService
 import graphql.schema.DataFetchingEnvironment
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.litote.kmongo.newId
-import java.util.*
 
 class HotelMutation(
     private val db: MongoDB,
@@ -99,7 +93,6 @@ class HotelMutation(
 
     @GraphQLDescription("Register new Hotel")
     @Suppress("unused")
-    @AuthHotelDirective
     suspend fun registerHotel(dfe: DataFetchingEnvironment, data: RegisterHotel): HotelQL? {
         val hotel = newHotelService.createNewHotel(data)?.toGraphQL(dfe)
         return hotel
