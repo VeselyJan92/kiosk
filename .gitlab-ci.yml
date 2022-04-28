@@ -19,9 +19,6 @@ build-frontend:
 
 
 build-backend:
-  services:
-    - name: mongo:latest
-      alias: mongo
   stage: build
   script:
     - docker build -t janvesely92/dt-backend ./backend

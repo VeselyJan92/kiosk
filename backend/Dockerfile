@@ -1,9 +1,6 @@
 FROM gradle:7-jdk11 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-
-RUN gradle :ktor:test
-
 RUN gradle :ktor:shadowjar --no-daemon
 
 FROM openjdk:11
