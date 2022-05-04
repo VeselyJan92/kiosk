@@ -4,6 +4,7 @@ val logback_version: String by project
 
 
 plugins {
+    id("org.jetbrains.kotlinx.kover") version "0.5.0"
     application
     kotlin("jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
@@ -65,9 +66,9 @@ dependencies {
     testImplementation("io.ktor:ktor-client-serialization:$ktor_version")
 
 
-    implementation("org.litote.kmongo:kmongo:4.5.0")
-    implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.5.0")
-    implementation("org.litote.kmongo:kmongo-id-serialization:4.5.0")
+    implementation("org.litote.kmongo:kmongo:4.5.1")
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.5.1")
+    implementation("org.litote.kmongo:kmongo-id-serialization:4.5.1")
 
 
     implementation("com.expediagroup:graphql-kotlin-server:6.0.0-alpha.0")
@@ -85,8 +86,6 @@ dependencies {
 
 
     testImplementation("org.testcontainers:mongodb:1.16.3")
-
-
 
 
     implementation("com.thedeanda:lorem:2.1")

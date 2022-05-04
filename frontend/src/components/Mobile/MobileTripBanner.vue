@@ -13,7 +13,7 @@
 
         <span class="date">24. 01. 2022</span>
 
-        <span class="material-icons" @click.stop="edit" v-if="user.edit_mode">edit</span>
+        <span class="material-icons edit" @click.stop="edit" v-if="user.edit_mode">edit</span>
 
       </div>
 

@@ -6,7 +6,7 @@ import cz.cvut.veselj57.dt.graphql.model.TypeScriptInterface
 @kotlinx.serialization.Serializable
 
 data class TripDTO(
-    val _id: String? = null,
+    val _id: String,
     val hotel_id: String,
     val title: String,
     val text: String,

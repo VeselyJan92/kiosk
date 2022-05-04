@@ -9,7 +9,7 @@
     </form>
 
     <div class="popup-footer">
-      <button v-if="props.id" @click.stop="remove" type="button" class="btn btn-danger" @click="remove">Smazat</button>
+      <button id="popup-delete-category"  v-if="props.id" @click.stop="remove" type="button" class="btn btn-danger" @click="remove">Smazat</button>
       <button id="popup-edit-category-submit" type="submit" @click="submit" class="btn btn-primary">{{ props.id ? "Uložit" : "Přidat"}}</button>
     </div>
 

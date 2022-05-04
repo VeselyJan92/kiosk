@@ -6,34 +6,36 @@
         <img :src="hotel.data.logo_img_url">
 
         <div>
-          <span>{{ hotel.data.hotel_name }}</span>
+          <span id="hotel-name">{{ hotel.data.hotel_name }}</span>
           <span>Informace pro Hosty</span>
         </div>
       </div>
 
       <div class="link">
-        <router-link class="accommodation-link" to="/">Karta pobytu</router-link>
+        <router-link class="accommodation-link" :to="{ name: 'hotel', params: { id: hotel.hotel_id }}">Karta pobytu</router-link>
       </div>
 
       <div class="link">
         <span style="color: red">Prozkoumej</span>
-        <router-link to="/">Oficiální stránky ubytovatele</router-link>
+
+        <router-link v-if="kiosk.kiosk_mode" id="hotel-website" :to="{ name: 'kiosk-web', params: { id: hotel.hotel_id }}">Oficiální stránky ubytovatele</router-link>
+        <a v-if="!kiosk.kiosk_mode" id="hotel-website" :href="hotel.data.official_website">Oficiální stránky ubytovatele</a>
+
+
       </div>
 
       <div class="spacer"></div>
 
       <div class="contact">
         <div>
-          <GrayButton icon="call" :text="hotel.data.contact_phone"></GrayButton>
+          <GrayButton id="hotel-phone" icon="call" :text="hotel.data.contact_phone"></GrayButton>
         </div>
 
         <div>
-          <GrayButton icon="email" :text="hotel.data.contact_email"></GrayButton>
+          <GrayButton id="hotel-email" icon="email" :text="hotel.data.contact_email"></GrayButton>
         </div>
       </div>
-
-
-
+      
     </div>
 
 
@@ -43,9 +45,11 @@
 <script setup>
 import GrayButton from "../GrayButton.vue";
 import {useHotelStore} from "@/stores/hotel";
+import {useKioskStore} from "@/stores/kiosk";
 
 
 const hotel = useHotelStore()
+const kiosk = useKioskStore()
 
 
 </script>

@@ -59,7 +59,7 @@
 
 
       <div class="popup-footer">
-        <button type="button" class="btn btn-danger" @click="deleteTrip">Smazat</button>
+        <button type="button" class="btn btn-danger" id="popup-delete-trip" @click="deleteTrip">Smazat</button>
         <button type="submit" class="btn btn-primary" id="popup-edit-trip-submit" >Uložit</button>
       </div>
 
@@ -171,7 +171,9 @@ async function submit(e){
 
   const mutation = gql`mutation( $input: UpsertTripInput! ) { upsertTrip(input: $input) { _id } }`
 
-  await getGraphQLClient().request(mutation, {input: {id: props.tripId, imgs, tags, categories, title: trip.title, text: trip.text}})
+  const id = props.tripId === "new" ? null : props.tripId
+
+  await getGraphQLClient().request(mutation, {input: {id, imgs, tags, categories, title: trip.title, text: trip.text}})
 
   await store.reload()
 

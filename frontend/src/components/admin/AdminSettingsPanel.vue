@@ -17,7 +17,7 @@
       <span>Skupina výletů</span>
     </div>
 
-    <div @click.stop="settings">
+    <div @click.stop="settings" id="hotel-settings">
       <span class="material-icons md-24">settings</span>
       <span>Nastavení</span>
     </div>

@@ -3,7 +3,7 @@
 
     <div class="category" v-bind:class="{selected: selected}">
       <span>{{ props.category.name }}</span>
-      <span class="material-icons" v-if="user.edit_mode" @click.stop="edit">edit</span>
+      <span class="material-icons edit" v-if="user.edit_mode" @click.stop="edit">edit</span>
     </div>
 
   </div>

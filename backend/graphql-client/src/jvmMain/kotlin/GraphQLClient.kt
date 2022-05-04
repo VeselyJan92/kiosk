@@ -59,6 +59,8 @@ abstract class GraphQLClient(val client: HttpClient, private var token: String? 
 
         val text = response.bodyAsText()
 
+        println(text)
+
         return Json.parseToJsonElement(text)
     }
 
@@ -79,7 +81,7 @@ abstract class GraphQLClient(val client: HttpClient, private var token: String? 
         if (data == null)
             throw Exception("Missing data")
         else
-            return Json.decodeFromJsonElement(data)
+            return json.decodeFromJsonElement(data)
     }
 
 

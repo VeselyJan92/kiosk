@@ -1,10 +1,10 @@
 package cz.cvut.veselj57.dt.repository
 
+import com.mongodb.client.model.Filters.and
 import cz.cvut.veselj57.dt.entities.HotelEntity
 import cz.cvut.veselj57.dt.entities.TripEntity
 import cz.cvut.veselj57.dt.entities.TripCategoryEntity
 import cz.cvut.veselj57.dt.persistence.MongoDB
-import org.bson.types.ObjectId
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.litote.kmongo.*
@@ -16,7 +16,6 @@ class TripDAO(): KoinComponent {
     val db by inject<MongoDB>()
 
     val imageDAO by inject<ImageDAO>()
-    val hotelDAO by inject<HotelDAO>()
 
     suspend fun insertTrip(
         hotelId: String,
@@ -74,6 +73,7 @@ class TripDAO(): KoinComponent {
 
 
     suspend fun upsertTrip(trip: TripEntity, addImages: List<ByteArray> = listOf()): TripEntity {
+        println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         val oldTrip = getTrip(trip._id)
 
         val newImageIds = addImages.map {
@@ -94,7 +94,6 @@ class TripDAO(): KoinComponent {
 
         return trip
     }
-
 
     suspend fun updateTripCategories(hotel: HotelEntity, trip: TripEntity, categories: List<String>){
         hotel.trip_categories.forEach {
@@ -120,7 +119,7 @@ class TripDAO(): KoinComponent {
             db.hotels.updateOne(hotel)
         }
 
-        db.trips.deleteOneById(ObjectId(trip._id))
+        db.trips.deleteOne(TripEntity::_id eq trip._id)
     }
 
 }

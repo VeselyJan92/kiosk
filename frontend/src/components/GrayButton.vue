@@ -1,7 +1,7 @@
 <template>
     <div>
       <span v-if="props.icon" class="material-icons md-24">{{props.icon}}</span>
-      <span>{{ props.text }}</span>
+      <span class="text">{{ props.text }}</span>
     </div>
 </template>
 

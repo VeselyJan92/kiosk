@@ -9,11 +9,15 @@ export const useUserStore  = defineStore("user_store", {
   state: () => ({
     authenticated_hotel_id: null,
     token: null,
+    kiosk: false
   }),
   getters:{
     edit_mode(): boolean{
       return this.token !=null
     },
+    kiosk_mode(): boolean{
+      return this.kiosk
+    }
 
   },
   actions: {
@@ -22,7 +26,7 @@ export const useUserStore  = defineStore("user_store", {
       this.authenticated_hotel_id = null
     },
 
-    async login(email: String, password: String){
+    async login(email: String, password: String, kioskMode: boolean){
 
       const url = import.meta.env.VITE_SERVER_URL + "/login"
 
@@ -34,16 +38,21 @@ export const useUserStore  = defineStore("user_store", {
         body: JSON.stringify({email, password})
       });
 
+      console.log("Kiosk MODE AUTH:" + kioskMode)
+      console.log("response:" + response.status)
+
 
       if(response.status == 200){
         const payload = await response.json()
 
-        this.authenticated_hotel_id = payload.id
-        this.token = payload.token
+        console.log(payload)
 
-        console.log(this.token)
+        if (!kioskMode){
+          this.authenticated_hotel_id = payload.id
+          this.token = payload.token
+        }
 
-        return this.authenticated_hotel_id
+        return payload.id
       }
 
       return null

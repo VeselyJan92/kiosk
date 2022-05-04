@@ -18,9 +18,12 @@ class TravelInfoTest {
         val email = "veselj57@fel.cvut.cz"
         val title = "Random title"
 
+
+        val hotelData = TestSeeder.getHotelRegistration(email, password)
+
         val actions = HotelActions(client)
 
-        val hotelId = actions.registerHotel(TestSeeder.getHotelRegistration(email, password))._id
+        val hotelId = actions.registerHotel(hotelData)._id
 
         actions.authorize(Credentials(email, password))
 

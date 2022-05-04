@@ -6,6 +6,7 @@ import com.expediagroup.graphql.server.operations.Mutation
 import cz.cvut.veselj57.dt.entities.TripCategoryEntity
 import cz.cvut.veselj57.dt.graphql.directives.AuthHotelDirective
 import cz.cvut.veselj57.dt.graphql.model.*
+import cz.cvut.veselj57.dt.graphql.model.mutations.HotelSettingsUpdate
 import cz.cvut.veselj57.dt.graphql.security.GQLRole
 import cz.cvut.veselj57.dt.persistence.MongoDB
 import cz.cvut.veselj57.dt.repository.HotelDAO
@@ -41,30 +42,19 @@ class HotelMutation(
         return hotel.trip_categories.map { it.toGQL(dfe) }
     }
 
-    data class HotelUpdate(
-        val _id: String,
-        val hotel_name: String,
-        val intro_img: String?,
-        val logo_img: String?,
-        val accommodation_text: String,
-        val contact_phone: String,
-        val contact_email: String,
-        val official_website: String
-    )
 
     @GraphQLDescription("Updates hotel entity fields with the input")
     @Suppress("unused")
     @AuthHotelDirective
-    suspend fun modifyHotel(dfe: DataFetchingEnvironment, data: HotelUpdate): HotelQL{
+    suspend fun updateHotelSettings(dfe: DataFetchingEnvironment, data: HotelSettingsUpdate): HotelQL{
         val hotel = dfe.graphQlContext.get<GQLRole.Hotel>(KtorGraphQLContextFactory.ROLE_KEY).entity
 
-
         if(data.logo_img != null){
-            hotel.logo_img_id = imageDAO.putImageBase64(data.logo_img)
+            hotel.logo_img_id = imageDAO.putImageBase64(data.logo_img!!)
         }
 
         if(data.intro_img != null){
-            hotel.intro_img_id = imageDAO.putImageBase64(data.intro_img)
+            hotel.intro_img_id = imageDAO.putImageBase64(data.intro_img!!)
         }
 
 

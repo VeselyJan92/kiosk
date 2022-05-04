@@ -12,7 +12,7 @@ export type RootType = {
   }
 }
 
-export const useHotelStore  = defineStore("kiosk_store", {
+export const useHotelStore  = defineStore("hotel_store", {
   state: (): RootType => ({
     data: null,
     hotel_id: "",

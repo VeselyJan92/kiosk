@@ -6,24 +6,24 @@
       <div class="row mb-3">
         <div class="col">
           <label>Název zařízení</label>
-          <input  class="form-control" v-model="data.hotel_name" placeholder="Sleva pro děti" style="height: 42px">
+          <input  class="form-control" v-model="data.hotel_name" id="popuo-hotel-settings-name" style="height: 42px">
         </div>
 
         <div class="col">
           <label>Oficiální stránky</label>
-          <input  class="form-control" v-model="data.official_website"  placeholder="Sleva pro děti" style="height: 42px">
+          <input  class="form-control" v-model="data.official_website" id="popuo-hotel-settings-website"  style="height: 42px">
         </div>
       </div>
 
       <div class="row mb-3">
         <div class="col">
           <label>Kontaktní email</label>
-          <input  class="form-control" v-model="data.contact_email"  placeholder="Sleva pro děti" style="height: 42px">
+          <input  class="form-control" v-model="data.contact_email" id="popuo-hotel-settings-email"  style="height: 42px">
         </div>
 
         <div class="col">
           <label>Kontaktní telefon</label>
-          <input  class="form-control" v-model="data.contact_phone"  placeholder="Sleva pro děti" style="height: 42px">
+          <input  class="form-control" v-model="data.contact_phone" id="popuo-hotel-settings-phone"  style="height: 42px">
         </div>
       </div>
 
@@ -107,8 +107,8 @@ async function submit(e: Event) {
   const logo_img =  logoPic.value.files[0] ? encode(await readFileAsBlob( logoPic.value.files[0])) : null
 
   const query = gql`
-    mutation ($data: HotelUpdateInput!) {
-      modifyHotel(data: $data) {
+    mutation ($data: HotelSettingsUpdateInput!) {
+      updateHotelSettings(data: $data) {
         _id
       }
     }

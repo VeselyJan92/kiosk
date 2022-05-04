@@ -23,6 +23,7 @@ import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
 import com.expediagroup.graphql.generator.scalars.IDValueUnboxer
 import com.expediagroup.graphql.generator.toSchema
 import cz.cvut.veselj57.dt.graphql.directives.AuthHotelDirectiveWiring
+import cz.cvut.veselj57.dt.graphql.directives.StringRangeDirectiveWiring
 import cz.cvut.veselj57.dt.graphql.model.KoinEntity
 import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTrip
 import cz.cvut.veselj57.dt.graphql.mutations.HotelMutation
@@ -41,10 +42,16 @@ import kotlin.reflect.KClass
 private class CustomDataFetcherExceptionHandler : DataFetcherExceptionHandler {
     override fun onException(handlerParameters: DataFetcherExceptionHandlerParameters): DataFetcherExceptionHandlerResult {
 
-        handlerParameters.exception.printStackTrace()
+        val exception = if (handlerParameters.exception.cause is IllegalArgumentException){
+            handlerParameters.exception.cause!!
+        }else
+            handlerParameters.exception
+
+        exception.printStackTrace()
+
 
         val error = object : GraphQLError{
-            override fun getMessage() =  handlerParameters.exception.message +  ": " +  handlerParameters.path.toString()
+            override fun getMessage() =  exception.message +  ": " +  handlerParameters.path.toString()
 
             override fun getLocations() = mutableListOf(handlerParameters.sourceLocation)
 
@@ -66,7 +73,8 @@ object GraphQLSchema: KoinComponent {
             override val wiringFactory = KotlinDirectiveWiringFactory(
                 manualWiring = buildMap {
                     put("AuthorizeHotel",  AuthHotelDirectiveWiring())
-                }
+                    put("StringRange",  StringRangeDirectiveWiring())
+                },
             )
 
             override fun isValidSuperclass(kClass: KClass<*>): Boolean {

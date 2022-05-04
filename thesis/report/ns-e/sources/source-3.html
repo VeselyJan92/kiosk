@@ -1,0 +1,124 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MongoDB</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">cz.cvut.veselj57.dt.persistence</a>
+</div>
+
+<h1>Coverage Summary for Class: MongoDB (cz.cvut.veselj57.dt.persistence)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">MongoDB</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package cz.cvut.veselj57.dt.persistence
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.mongodb.reactivestreams.client.gridfs.GridFSBucket
+<i class="no-highlight">4</i>&nbsp;import com.mongodb.reactivestreams.client.gridfs.GridFSBuckets
+<i class="no-highlight">5</i>&nbsp;import cz.cvut.veselj57.dt.entities.TravelInfoEntity
+<i class="no-highlight">6</i>&nbsp;import cz.cvut.veselj57.dt.entities.HotelEntity
+<i class="no-highlight">7</i>&nbsp;import cz.cvut.veselj57.dt.entities.ImageEntity
+<i class="no-highlight">8</i>&nbsp;import cz.cvut.veselj57.dt.entities.TripEntity
+<i class="no-highlight">9</i>&nbsp;import io.ktor.server.application.*
+<i class="no-highlight">10</i>&nbsp;import org.litote.kmongo.coroutine.CoroutineCollection
+<i class="no-highlight">11</i>&nbsp;import org.litote.kmongo.coroutine.CoroutineDatabase
+<i class="no-highlight">12</i>&nbsp;import org.litote.kmongo.coroutine.coroutine
+<i class="no-highlight">13</i>&nbsp;import org.litote.kmongo.reactivestreams.KMongo
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;interface MongoDB {
+<i class="no-highlight">17</i>&nbsp;    val database: CoroutineDatabase
+<i class="no-highlight">18</i>&nbsp;    val hotels: CoroutineCollection&lt;HotelEntity&gt;
+<i class="no-highlight">19</i>&nbsp;    val trips: CoroutineCollection&lt;TripEntity&gt;
+<i class="no-highlight">20</i>&nbsp;    val posts: CoroutineCollection&lt;TravelInfoEntity&gt;
+<i class="no-highlight">21</i>&nbsp;    val imgs: CoroutineCollection&lt;ImageEntity&gt;
+<i class="no-highlight">22</i>&nbsp;}
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;class MongoDBImpl(
+<i class="no-highlight">25</i>&nbsp;    val DATABASE_NAME: String,
+<i class="no-highlight">26</i>&nbsp;    val PORT: Int,
+<i class="no-highlight">27</i>&nbsp;    val IP: String
+<i class="no-highlight">28</i>&nbsp;) : MongoDB {
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    companion object{
+<i class="no-highlight">31</i>&nbsp;        public fun getFromApplicationConfig(application: Application): MongoDB = application.run {
+<i class="no-highlight">32</i>&nbsp;            val host = environment.config.property(&quot;mongodb.host&quot;).getString()
+<i class="no-highlight">33</i>&nbsp;            val port = environment.config.property(&quot;mongodb.port&quot;).getString().toInt()
+<i class="no-highlight">34</i>&nbsp;            val database = environment.config.property(&quot;mongodb.database&quot;).getString()
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;            return MongoDBImpl(database, port, host)
+<i class="no-highlight">37</i>&nbsp;        }
+<i class="no-highlight">38</i>&nbsp;    }
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;    override val database = getMongoDatabase().coroutine
+<i class="no-highlight">42</i>&nbsp;
+<i class="no-highlight">43</i>&nbsp;    override val hotels = database.getCollection&lt;HotelEntity&gt;()
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    override val trips = database.getCollection&lt;TripEntity&gt;()
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;    override val posts = database.getCollection&lt;TravelInfoEntity&gt;()
+<i class="no-highlight">48</i>&nbsp;
+<i class="no-highlight">49</i>&nbsp;    override val imgs = database.getCollection&lt;ImageEntity&gt;()
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    private fun getURL(ip: String, port: Int) = &quot;mongodb://$ip:$port&quot;
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;    private fun getMongoDatabase() = KMongo.createClient(getURL(IP, PORT)).getDatabase(DATABASE_NAME)
+<i class="no-highlight">54</i>&nbsp;
+<i class="no-highlight">55</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-04-28 22:03</div>
+</div>
+</body>
+</html>

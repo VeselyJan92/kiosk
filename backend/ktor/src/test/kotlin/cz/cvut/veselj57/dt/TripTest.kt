@@ -15,7 +15,6 @@ import kotlin.test.*
 
 class TripTest {
 
-
     @Test
     fun `insert and modify trip`() = testApplicationClearDB {
 
@@ -85,85 +84,28 @@ class TripTest {
 
     }
 
+
     @Test
-    fun `prevent trip insertion to another hotel`() = testApplicationClearDB {
+    fun `delete trip`() = testApplicationClearDB {
         val password = "secret"
         val email = "veselj57@fel.cvut.cz"
 
-        val hotel1Actions = HotelActions(client)
+        val data = TestSeeder.getUpsertTripData(categories = listOf())
+        val hotel = TestSeeder.getHotelRegistration(email, password)
+        val credentials = Credentials(email, password)
 
-        hotel1Actions.registerHotel(TestSeeder.getHotelRegistration(email, password))
-        hotel1Actions.authorize(Credentials(email, password))
+        val hotelActions = HotelActions(client)
 
+        hotelActions.registerHotel(hotel)
+        hotelActions.authorize(credentials)
 
-        val tripCategories = hotel1Actions.modifyCategories(listOf(TripCategoryDTO(null, "category", listOf()))).map { it._id!! }
-        val inserted = hotel1Actions.upsertTrip(TestSeeder.getUpsertTripData(categories = tripCategories))
+        val tripId = hotelActions.upsertTrip(data)._id
 
-        val h2_password = "secret"
-        val h2_email = "jan.vesely92@gmail.com"
+        assertEquals(1, hotelActions.getTrips(listOf(tripId)).size)
 
+        hotelActions.deleteTrip(tripId)
 
-        val hotel2Actions = HotelActions(client)
-
-        hotel2Actions.registerHotel(TestSeeder.getHotelRegistration(h2_email, h2_password))
-        hotel2Actions.authorize(Credentials(h2_email, h2_password))
-
-        val tripData = TestSeeder.getUpsertTripData(id = inserted._id, categories = tripCategories)
-        try {
-            hotel2Actions.upsertTrip(tripData)
-            fail()
-        }catch (e: Exception){
-            assertContains(e.toString(), "Unauthorized")
-        }
-    }
-
-    @Test
-    fun `modify categories`() = testApplicationClearDB{
-        val password = "secret"
-        val email = "veselj57@fel.cvut.cz"
-
-        val hotel1Actions = HotelActions(client)
-
-        val registration = hotel1Actions.registerHotel(TestSeeder.getHotelRegistration(email, password))
-        hotel1Actions.authorize(Credentials(email, password))
-
-        val categoriesx = listOf(
-            TripCategoryDTO(null, "category 1", listOf()),
-            TripCategoryDTO(null, "category 2", listOf())
-        )
-
-        val categories = hotel1Actions.modifyCategories(categoriesx)
-
-        val trip1 = hotel1Actions.upsertTrip(TestSeeder.getUpsertTripData(categories = listOf(categories[0]._id!!)))
-        val trip2 = hotel1Actions.upsertTrip(TestSeeder.getUpsertTripData(categories = listOf(categories[1]._id!!)))
-
-        val insertedCategories  = hotel1Actions.getHotelData(registration._id)!!.trip_categories
-
-        assertEquals(categoriesx.size, insertedCategories!!.size)
-
-        insertedCategories.find { it.name == "category 1" }!!.trip_ids.apply {
-            assertEquals(1, size)
-            assertEquals(trip1._id, first() )
-        }
-
-        insertedCategories.find { it.name == "category 2" }!!.trip_ids.apply {
-            assertEquals(1, size)
-            assertEquals(trip2._id, first() )
-        }
-
-        hotel1Actions.upsertTrip(TestSeeder.getUpsertTripData(id = trip1._id, categories = listOf()))
-
-        hotel1Actions.getHotelData(registration._id)!!.trip_categories!!.apply {
-            find { it.name == "category 1" }!!.trip_ids.apply {
-                assertEquals(0, size)
-            }
-
-            find { it.name == "category 2" }!!.trip_ids.apply {
-                assertEquals(1, size)
-                assertEquals(trip2._id, first() )
-            }
-        }
-
+        assertEquals(0, hotelActions.getTrips(listOf(tripId)).size)
     }
 
 }

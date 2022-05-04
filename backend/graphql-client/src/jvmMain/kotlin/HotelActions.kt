@@ -1,14 +1,9 @@
-import cz.cvut.veselj57.dt.graphql.model.mutations.HotelMutation
-import cz.cvut.veselj57.dt.graphql.model.mutations.TravelInfoDTO
-import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTravelInfo
-import cz.cvut.veselj57.dt.graphql.model.mutations.UpsertTrip
+import cz.cvut.veselj57.dt.graphql.model.mutations.*
 import cz.cvut.veselj57.dt.graphql.model.query.HotelDTO
 import cz.cvut.veselj57.dt.graphql.model.query.TripCategoryDTO
 import cz.cvut.veselj57.dt.graphql.model.query.TripDTO
 import io.ktor.client.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.put
+import kotlinx.serialization.json.*
 
 class HotelActions(client: HttpClient): GraphQLClient(client) {
 
@@ -16,6 +11,15 @@ class HotelActions(client: HttpClient): GraphQLClient(client) {
         return graphQLRequestTyped(
             "mutation(\$data: RegisterHotelInput!) { registerHotel(data: \$data) { _id email accommodation_text hotel_name contact_phone contact_email official_website }}",
             "registerHotel"
+        ){
+            putSerializable("data", data)
+        }
+    }
+
+    suspend fun updateHotelSetting(data: HotelSettingsUpdate) {
+        return graphQLRequestTyped(
+            "mutation (\$data: HotelSettingsUpdateInput!) { updateHotelSettings(data: \$data) { _id }}",
+            "updateHotelSettings"
         ){
             putSerializable("data", data)
         }
@@ -30,12 +34,22 @@ class HotelActions(client: HttpClient): GraphQLClient(client) {
         }
     }
 
+
     suspend fun upsertTrip(trip: UpsertTrip): TripDTO {
         return graphQLRequestTyped(
             query = "mutation (\$input: UpsertTripInput!) { upsertTrip(input: \$input){ _id hotel_id title text imgs tags } }",
             topLevelName = "upsertTrip",
         ){
             put("input", Json.encodeToJsonElement(trip))
+        }
+    }
+
+    suspend fun deleteTrip(id: String): TripDTO {
+        return graphQLRequestTyped(
+            query = "mutation(\$id: String!) { deleteTrip(id: \$id){ _id hotel_id title text imgs tags } }",
+            topLevelName = "deleteTrip",
+        ){
+            put("id", id)
         }
     }
 
@@ -84,6 +98,19 @@ class HotelActions(client: HttpClient): GraphQLClient(client) {
         }
     }
 
+    suspend fun getTrips(ids: List<String>): List<TripDTO> {
+        return graphQLRequestTyped(
+            query = "query(\$ids: [String!]!) { searchTrips(ids: \$ids){ _id hotel_id imgs tags text title img_urls } }",
+            topLevelName = "searchTrips",
+        ){
+            putJsonArray("ids"){
+                ids.forEach{ add(JsonPrimitive(it)) }
+            }
+        }
+    }
+
+
+
     suspend fun upsertTravelInfo(info: UpsertTravelInfo): TravelInfoDTO {
         return graphQLRequestTyped(
             query = "mutation (\$input: UpsertTravelInfoInput!) { upsertTravelInfo(input: \$input){ _id hotel_id title text } }",
@@ -95,7 +122,7 @@ class HotelActions(client: HttpClient): GraphQLClient(client) {
 
     suspend fun deleteTravelInfo(id: String): TravelInfoDTO {
         return graphQLRequestTyped(
-            query = "mutation (\$id: String!) { deleteTravelInfo(id: \$id){ _id hotel_id title text } }",
+            query = "mutation(\$id: String!) { deleteTravelInfo(id: \$id){ _id hotel_id title text } }",
             topLevelName = "deleteTravelInfo",
         ){
             put("id", id)

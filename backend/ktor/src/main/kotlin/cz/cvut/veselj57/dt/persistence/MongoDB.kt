@@ -50,7 +50,6 @@ class MongoDBImpl(
 
     private fun getURL(ip: String, port: Int) = "mongodb://$ip:$port"
 
-   // private fun getMongoDatabase() = KMongo.createClient(getURL(IP, PORT)).getDatabase(DATABASE_NAME)
-    private fun getMongoDatabase() = KMongo.createClient("mongodb://mongodb:27017").getDatabase(DATABASE_NAME)
+    private fun getMongoDatabase() = KMongo.createClient(getURL(IP, PORT)).getDatabase(DATABASE_NAME)
 
 }

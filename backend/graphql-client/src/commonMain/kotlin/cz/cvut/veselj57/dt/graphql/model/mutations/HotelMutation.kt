@@ -16,3 +16,18 @@ interface HotelMutation {
     )
 
 }
+
+
+
+@TypeScriptInterface
+@kotlinx.serialization.Serializable
+data class HotelSettingsUpdate(
+    val _id: String,
+    val hotel_name: String,
+    val intro_img: String?,
+    val logo_img: String?,
+    val accommodation_text: String,
+    val contact_phone: String,
+    val contact_email: String,
+    val official_website: String
+)

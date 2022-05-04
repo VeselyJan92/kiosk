@@ -6,7 +6,6 @@ import cz.cvut.veselj57.dt.repository.TripDAO
 import cz.cvut.veselj57.dt.services.ServerConfig
 import graphql.schema.DataFetchingEnvironment
 import org.koin.core.component.get
-import org.koin.java.KoinJavaComponent.getKoin
 
 
 

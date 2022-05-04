@@ -18,6 +18,11 @@
 
         <p class="text-danger" v-if="invalidCredentials">Špatné přihlašovací údaje</p>
 
+        <div class="form-check mb-3">
+          <input type="checkbox" class="form-check-input" v-model="kioskMode">
+          <label class="form-check-label" >Kioksek</label>
+        </div>
+
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Přihlásit se</button>
         <p class="mt-5 mb-3 text-muted">© 2021 –2022</p>
@@ -33,10 +38,14 @@
 import {ref} from "vue";
 import {useUserStore} from "@/stores/user";
 import router from "@/router";
+import {useKioskStore} from "@/stores/kiosk";
 
 
 
 const userStore = useUserStore()
+const kioskStore = useKioskStore()
+
+const kioskMode = ref(false)
 
 
 const credentials = ref({email: "jan.vesely92@gmail.com", password: "secret"})
@@ -46,10 +55,17 @@ const invalidCredentials = ref(false)
 async function login(e){
   e.preventDefault()
 
-  const hotelId = await userStore.login(credentials.value.email, credentials.value.password)
+  const hotelId = await userStore.login(credentials.value.email, credentials.value.password, kioskMode.value)
 
   if (hotelId){
+
     invalidCredentials.value = false
+
+    if (kioskMode.value){
+      kioskStore.setKioskMode(hotelId)
+    }
+
+
     router.push({name: "hotel", params: {id: hotelId}} )
   }else{
     invalidCredentials.value = true

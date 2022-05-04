@@ -38,6 +38,7 @@
     "@vue/tsconfig": "^0.1.3",
     "apollo": "^2.33.10",
     "cypress-file-upload": "^5.0.8",
+    "cypress-high-resolution": "^1.0.0",
     "node-sass": "^7.0.1",
     "sass-loader": "^12.6.0",
     "typescript": "~4.5.5",

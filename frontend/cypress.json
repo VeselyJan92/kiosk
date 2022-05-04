@@ -2,7 +2,8 @@
 
 {
   "pluginsFile": "cypress/plugins/index.js",
-  "video": false,
+  "video": true,
+  "videoCompression": false,
   "integrationFolder": "cypress/integration/",
   "baseUrl": "http://localhost:3000",
   "testFiles": "**/*.*",

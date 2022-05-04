@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import KioskView from '@/views/KioskView.vue'
 import KioskWebView from '@/views/KioskWebSiteView.vue'
 import LoginView from '@/views/LoginView.vue'
 import OnlineView from '@/views/MobileView.vue'
@@ -10,6 +9,7 @@ import EditCategory from '@//components/admin/PopupEditCategory.vue'
 import TravelInfoPopup from '@//components/Mobile/MobileTravelInfoPopup.vue'
 import Settings from '@//components/admin/PopupSettings.vue'
 import {useHotelStore} from "@/stores/hotel";
+import {useKioskStore} from "@/stores/kiosk";
 
 
 async function checkData(to){
@@ -21,19 +21,24 @@ async function checkData(to){
 }
 
 
+async function kioskRedirect(to){
+  const kiosk = useKioskStore()
+
+  if (kiosk.kiosk_mode){
+    return {name: "hotel", params:{id: kiosk.hotel_id} }
+  }
+}
+
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
       name: 'kiosk_login',
-      component: LoginView
-    },
-    {
-      path: '/kiosk/:id',
-      name: 'kiosk-panel',
-      component: KioskView,
-      beforeEnter: [checkData],
+      component: LoginView,
+      beforeEnter:[kioskRedirect]
     },
     {
       path: '/kiosk/:id/web',
