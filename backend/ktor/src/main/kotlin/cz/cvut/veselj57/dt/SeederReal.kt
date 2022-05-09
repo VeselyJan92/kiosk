@@ -46,7 +46,7 @@ class SeederReal(): KoinComponent {
             contact_phone = "774 406 784",
             official_website = "http://veselypenzion.cz",
             trip_categories = listOf(
-                car(), turism(), attractions(), turism(), children()
+                car(), turism(), attractions(), children()
             )
         ))
 
