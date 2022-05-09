@@ -34,16 +34,16 @@
 import Tag from "../travel/Tag.vue";
 import {useUserStore} from "@/stores/user";
 import {useRouter} from "vue-router";
+import {computed} from "vue";
 
 const props = defineProps({data: Object})
 
 const user = useUserStore()
-
 const router = useRouter()
-const params = {id: props.data.hotel_id, tripId: props.data._id}
 
-const show = () => router.push({name: 'hotel-trip', params });
-const edit = () => router.push({name: 'edit-hotel-trip', params });
+
+const show = () => router.push({name: 'hotel-trip', params: {id: props.data.hotel_id, tripId: props.data._id} });
+const edit = () => router.push({name: 'edit-hotel-trip', params: {id: props.data.hotel_id, tripId: props.data._id} });
 
 </script>
 
