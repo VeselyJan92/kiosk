@@ -14,14 +14,13 @@
 import {useHotelStore} from "@/stores/hotel";
 import {useUserStore} from "@/stores/user";
 import {useRouter} from "vue-router";
+import router from "@/router";
 
 const props = defineProps({category: Object, selected:Boolean})
 
 const store = useHotelStore()
 
 const user = useUserStore()
-
-const router = useRouter()
 
 const edit = () => router.push({name: 'edit-hotel-category', params: {id: store.hotel_id, categoryId: props.category._id }});
 

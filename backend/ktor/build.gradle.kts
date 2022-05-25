@@ -77,9 +77,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
 
 
-    val koin_version= "3.2.0-beta-1"
+    val koin_version= "3.2.0"
     implementation( "io.insert-koin:koin-core:$koin_version")
-    //     implementation( "io.insert-koin:koin-ktor:$koin_version")
+    implementation( "io.insert-koin:koin-ktor:$koin_version")
     implementation( "io.insert-koin:koin-logger-slf4j:$koin_version")
     testImplementation( "io.insert-koin:koin-test:$koin_version")
 

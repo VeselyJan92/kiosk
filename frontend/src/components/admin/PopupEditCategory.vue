@@ -9,8 +9,8 @@
     </form>
 
     <div class="popup-footer">
-      <button id="popup-delete-category"  v-if="props.id" @click.stop="remove" type="button" class="btn btn-danger" @click="remove">Smazat</button>
-      <button id="popup-edit-category-submit" type="submit" @click="submit" class="btn btn-primary">{{ props.id ? "Uložit" : "Přidat"}}</button>
+      <button id="popup-delete-category"  v-if="props.id" @click.stop="remove" type="button" class="btn btn-danger">Smazat</button>
+      <button id="popup-edit-category-submit" type="submit" @click.stop="submit" class="btn btn-primary">{{ props.id ? "Uložit" : "Přidat"}}</button>
     </div>
 
   </Popup>
@@ -48,10 +48,15 @@ async function modifyTripCategories(categories: Object[]){
   await getGraphQLClient().request(mutation, {categories})
   await hotel.reload()
 
+  console.log("back")
   router.back()
+
+
 }
 
 async function submit(e: Event){
+  console.log("submit")
+
   e.preventDefault()
 
   const categories = mapCategories()
@@ -72,6 +77,7 @@ async function submit(e: Event){
 
 
 async function remove(){
+  console.log("remove")
   const categories = mapCategories().filter(category => category._id != props.id)
   modifyTripCategories(categories)
 }

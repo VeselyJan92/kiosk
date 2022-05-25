@@ -18,33 +18,10 @@ import org.koin.core.KoinApplication
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.dsl.module
+import org.koin.ktor.plugin.Koin
 import org.koin.logger.SLF4JLogger
 import java.util.logging.Logger
 
-
-// Create a new custom application plugin
-internal class CustomKoinPlugin(internal val koinApplication: KoinApplication) {
-
-    // Implements ApplicationPlugin as a companion object.
-    companion object Plugin : BaseApplicationPlugin<ApplicationCallPipeline, KoinApplication, CustomKoinPlugin> {
-        // Creates a unique key for the plugin.
-        override val key = AttributeKey<CustomKoinPlugin>("CustomKoinPlugin")
-
-        override fun install(
-            pipeline: ApplicationCallPipeline,
-            configure: KoinApplication.() -> Unit,
-        ): CustomKoinPlugin {
-            val koinApplication = startKoin(appDeclaration = configure)
-
-            pipeline.environment?.monitor?.subscribe(ApplicationStopping) {
-                stopKoin()
-            }
-
-            return CustomKoinPlugin(koinApplication)
-        }
-
-    }
-}
 
 
 
@@ -52,7 +29,7 @@ fun Application.configureKoin(){
 
     val config = this@configureKoin.environment.config
 
-    install(CustomKoinPlugin) {
+    install(Koin) {
         val persistence = module {
             single { MongoDBImpl.getFromApplicationConfig(this@configureKoin)  }
         }
